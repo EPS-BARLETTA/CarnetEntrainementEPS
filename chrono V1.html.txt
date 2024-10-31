@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronomètre Vitesse</title>
+    <style>
+        /* Styles existants... */
+        .comparison {
+            color: #888;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .positive {
+            color: #4CAF50;
+        }
+        .negative {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <!-- Corps HTML existant... -->
+
+    <script>
+        // Variables et fonctions existantes...
+
+        function formatTimeDifference(seconds) {
+            const sign = seconds >= 0 ? '+' : '-';
+            const absSeconds = Math.abs(seconds);
+            const minutes = Math.floor(absSeconds / 60);
+            const remainingSeconds = Math.floor(absSeconds % 60);
+            return `${sign}${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        intermediateButton.addEventListener('click', () => {
+            if (intervalId && currentDistance + intermediateDistance <= totalDistance) {
+                const now = new Date();
+                const elapsed = Math.floor((now - startTime) / 1000);
+                currentDistance += intermediateDistance;
+
+                const speed = calculateSpeed(elapsed, currentDistance);
+                const timeEntry = document.createElement('li');
+
+                let comparisonHtml = '';
+                if (intermediateTimes.length > 0) {
+                    const lastEntry = intermediateTimes[intermediateTimes.length - 1];
+                    const timeDiff = elapsed - lastEntry.elapsed;
+                    const speedDiff = speed - lastEntry.speed;
+                    
+                    const timeDiffFormatted = formatTimeDifference(timeDiff);
+                    const speedDiffFormatted = speedDiff.toFixed(2);
+                    
+                    comparisonHtml = `<span class="comparison">
+                        <span class="${timeDiff > 0 ? 'positive' : 'negative'}">(${timeDiffFormatted})</span>
+                        <span class="${speedDiff > 0 ? 'positive' : 'negative'}">(${speedDiff > 0 ? '+' : ''}${speedDiffFormatted} km/h)</span>
+                    </span>`;
+                }
+
+                timeEntry.innerHTML = `Distance: ${currentDistance}m - Temps: ${formatTime(elapsed)} - Vitesse: ${speed} km/h ${comparisonHtml}`;
+                timeList.appendChild(timeEntry);
+                intermediateTimes.push({
+                    distance: currentDistance,
+                    elapsed: elapsed,
+                    speed: speed
+                });
+            }
+        });
+
+        downloadButton.addEventListener('click', () => {
+            let data = "Distance (m),Temps,Vitesse (km/h),Différence Temps,Différence Vitesse (km/h)\n";
+            intermediateTimes.forEach((entry, index) => {
+                let timeDiff = '';
+                let speedDiff = '';
+                if (index > 0) {
+                    const prevEntry = intermediateTimes[index - 1];
+                    timeDiff = formatTimeDifference(entry.elapsed - prevEntry.elapsed);
+                    speedDiff = (entry.speed - prevEntry.speed).toFixed(2);
+                }
+                data += `${entry.distance},${formatTime(entry.elapsed)},${entry.speed},${timeDiff},${speedDiff}\n`;
+            });
+
+            const finalElapsed = intermediateTimes[intermediateTimes.length - 1].elapsed;
+            const finalSpeed = calculateSpeed(finalElapsed, totalDistance);
+            data += `\nTemps Total: ${formatTime(finalElapsed)}\nVitesse Moyenne: ${finalSpeed} km/h`;
+
+            const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resultats_chronometre.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // Autres fonctions existantes...
+    </script>
+</body>
+</html>
