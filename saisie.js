@@ -1,6 +1,7 @@
 
 const QR_MAX = 2000;
 let lastCanvas = null;
+let lastSavedRow = null;
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const nom = localStorage.getItem("ceps:last_nom")||"";
@@ -24,17 +25,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
   renderTable();
 
-  function buildRow(){
+  function buildRowFromCurrent(){
     const notes = (document.getElementById("notes").value||"").trim();
     const now = new Date();
-    const row = {
+    return {
       "Nom": nom, "Prénom": prenom, "Classe": classe, "Trimestre": tri,
       "Date": now.toISOString().slice(0,10),
       "Semaine": isoWeek(now),
       "Activité": apsa,
       "Texte": notes
     };
-    return row;
   }
 
   function updateCounter(payloadStr){
@@ -47,28 +47,60 @@ document.addEventListener("DOMContentLoaded", ()=>{
     return bytes <= QR_MAX;
   }
 
-  document.addEventListener("input", ()=> updateCounter(JSON.stringify(buildRow())), true);
-
-  document.getElementById("save").addEventListener("click", ()=>{
-    const row = buildRow();
-    const payload = JSON.stringify(row);
-    if(!updateCounter(payload)){ alert("Texte trop long pour un QR fiable. Raccourcis."); return; }
-    const d = load(); d.seances = d.seances||[]; d.seances.push(row); save(d); renderTable();
-
+  function drawQR(payload){
     const host = document.getElementById("qr"); host.innerHTML="";
     const canvas = window.QRCodeGen(payload);
     host.appendChild(canvas);
     lastCanvas = canvas;
-    window.scrollTo({top: host.getBoundingClientRect().top + window.scrollY - 40, behavior:"smooth"});
+  }
+
+  // Live QR
+  document.addEventListener("input", ()=>{
+    const live = document.getElementById("live_qr").checked;
+    const row = buildRowFromCurrent();
+    const payload = JSON.stringify(row);
+    updateCounter(payload);
+    if(live){
+      if(!updateCounter(payload)) return;
+      drawQR(payload);
+    }
+  }, true);
+
+  // Save only
+  document.getElementById("save_only").addEventListener("click", ()=>{
+    const row = buildRowFromCurrent();
+    const d = load(); d.seances = d.seances||[]; d.seances.push(row); save(d); renderTable();
+    lastSavedRow = row;
+    alert("Séance enregistrée.");
   });
 
+  // Generate QR from current text
+  document.getElementById("gen_current").addEventListener("click", ()=>{
+    const row = buildRowFromCurrent();
+    const payload = JSON.stringify(row);
+    if(!updateCounter(payload)){ alert("Texte trop long pour un QR fiable. Raccourcis."); return; }
+    drawQR(payload);
+  });
+
+  // Generate QR from last saved session
+  document.getElementById("gen_last").addEventListener("click", ()=>{
+    const rows = (load().seances)||[];
+    const row = rows[rows.length-1];
+    if(!row){ alert("Aucune séance enregistrée."); return; }
+    const payload = JSON.stringify(row);
+    if(!updateCounter(payload)){ alert("La dernière séance est trop longue pour un QR fiable."); return; }
+    drawQR(payload);
+  });
+
+  // Download QR
   document.getElementById("download_qr").addEventListener("click", ()=>{
-    if(!lastCanvas){ alert("Génère d’abord le QR."); return; }
+    if(!lastCanvas){ alert("Génère d’abord un QR."); return; }
     const a = document.createElement("a");
     a.href = lastCanvas.toDataURL("image/png");
     a.download = `QR_${nom}_${prenom}_${classe}_${tri}.png`; a.click();
   });
 
+  // CSV
   document.getElementById("export_csv").addEventListener("click", ()=>{
     const rows = (load().seances)||[];
     if(!rows.length){ alert("Aucune séance à exporter."); return; }

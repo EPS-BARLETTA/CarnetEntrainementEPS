@@ -15,9 +15,15 @@
       <div class="progress"><span id="qr_bar"></span></div>
       <div class="note" id="qr_info">0 / 2000 octets</div>
     </div>
+    <div class="switch">
+      <input type="checkbox" id="live_qr">
+      <label for="live_qr">QR en direct (génère pendant la saisie)</label>
+    </div>
     <div class="actions">
-      <button id="save" class="btn cta">Enregistrer + Générer le QR</button>
-      <button id="download_qr" class="btn ghost">Télécharger le QR</button>
+      <button id="save_only" class="btn cta">Enregistrer la séance</button>
+      <button id="gen_current" class="btn ghost">Générer QR (texte actuel)</button>
+      <button id="gen_last" class="btn ghost">QR (dernière séance enregistrée)</button>
+      <button id="download_qr" class="btn alt">Télécharger le QR</button>
     </div>
     <div id="qr" class="qr"></div>
   </div>
