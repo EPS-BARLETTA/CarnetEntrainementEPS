@@ -3,25 +3,46 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="manifest.webmanifest">
-  <title>Carnet d’entraînement EPS — Accueil</title>
+  <title>Carnet EPS — Accueil</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="bar">
-    <h1>Carnet d’entraînement EPS — Lycée Vauban</h1>
-  </header>
+  <div class="bar">
+    <div class="bar-inner">
+      <div class="brand">
+        <div style="color:var(--accent)"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h8v8H3V3Zm10 0h8v8h-8V3ZM3 13h8v8H3v-8Zm12 4h6v6h-6v-6Z" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h1>Carnet d’entraînement EPS</h1>
+      </div>
+      <div class="switch">
+        <span class="badge">UI épurée</span>
+      </div>
+    </div>
+  </div>
+
   <main class="container">
-    <section class="card">
-      <h2>Votre cahier numérique individuel</h2>
-      <p>Consignez vos séances, générez un QR à faire scanner par l’enseignant (ScanProf). Hors-ligne, sans compte. Données exportables (CSV/JSON).</p>
-      <div class="actions">
-        <a class="btn primary" href="cahier-eps.html">Espace élève</a>
-        <a class="btn" href="fiche-securite.html">Fiche sécurité</a>
-        <a class="btn" href="aide.html">Aide</a>
+    <section class="card hero">
+      <div>
+        <h2>Un cahier simple, beau, et efficace</h2>
+        <p>Consignez vos séances, montrez un QR à scanner, et suivez votre progression. Fonctionne hors‑ligne, sans compte. Parfait sur <strong>iPad</strong>, <strong>Mac</strong>, <strong>smartphone</strong>.</p>
+        <div class="actions">
+          <a class="btn primary icon" href="app.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Entrer dans l’application</span></a>
+          <a class="btn ghost" href="securite.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 18h.01M9 9a3 3 0 1 1 4.8 2.4 4 4 0 0 0-1.8 3.3V15" stroke="currentColor" stroke-width="2"/></svg><span>Fiche sécurité</span></a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Mode d’emploi</h3>
+        <div class="list">
+          <div class="card-item">1. Saisir <span class="kbd">ID élève</span> et <span class="kbd">Trimestre</span>, charger le carnet.</div>
+          <div class="card-item">2. Choisir l’APSA via les <em>chips</em>, remplir la séance.</div>
+          <div class="card-item">3. Enregistrer puis faire scanner le <strong>QR</strong>.</div>
+        </div>
+        <div class="actions">
+          <a class="btn" href="app.html#help-id">Qu’est‑ce que l’ID élève ?</a>
+        </div>
       </div>
     </section>
   </main>
-  <footer class="foot">© 2025 — Vauban EPS — CarnetEntrainementEPS</footer>
+
+  <footer class="footer">© 2025 — Vauban EPS — Carnet EPS</footer>
 </body>
 </html>
