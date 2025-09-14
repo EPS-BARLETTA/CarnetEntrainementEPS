@@ -1,6 +1,22 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  const payload = sessionStorage.getItem("ceps:qr_payload") || "";
+  let payload = sessionStorage.getItem("ceps:qr_payload") || "";
+  // Fallback si page ouverte directement : reprendre la dernière séance enregistrée
+  if(!payload){
+    const nom = localStorage.getItem("ceps:last_nom")||"";
+    const prenom = localStorage.getItem("ceps:last_prenom")||"";
+    const classe = localStorage.getItem("ceps:last_classe")||"";
+    const tri = localStorage.getItem("ceps:last_tri")||"";
+    const key = `cahier_eps:${nom}:${prenom}:${classe}:${tri}`;
+    try{
+      const raw = localStorage.getItem(key);
+      if(raw){
+        const obj = JSON.parse(raw);
+        const last = (obj.seances||[])[(obj.seances||[]).length-1];
+        if(last){ payload = JSON.stringify(last); }
+      }
+    }catch(e){}
+  }
   const container = document.getElementById("qrc");
   container.innerHTML = "";
   try{
