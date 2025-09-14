@@ -1,13 +1,13 @@
 
-function keyByName(nom, prenom, classe, tri){ return `cahier_eps:${nom}:${prenom}:${classe}:${tri}`; }
+function keyBy(nom, prenom, classe, tri){ return `cahier_eps:${nom}:${prenom}:${classe}:${tri}`; }
 function loadCahier(nom, prenom, classe, tri){
-  const raw = localStorage.getItem(keyByName(nom, prenom, classe, tri));
-  if (!raw) return {meta:{}, seances:[]};
+  const raw = localStorage.getItem(keyBy(nom, prenom, classe, tri));
+  if(!raw) return { meta:{}, seances:[] };
   try { return JSON.parse(raw); } catch(e){ return {meta:{}, seances:[]}; }
 }
 function saveCahier(nom, prenom, classe, tri, data){
   data.meta = {...(data.meta||{}), updated_at:new Date().toISOString()};
-  localStorage.setItem(keyByName(nom, prenom, classe, tri), JSON.stringify(data));
+  localStorage.setItem(keyBy(nom, prenom, classe, tri), JSON.stringify(data));
 }
 function toCSV(rows){
   if(!rows.length) return "";
@@ -31,4 +31,12 @@ function fromCSV(text){
     rows.push(obj);
   }
   return rows;
+}
+function isoWeek(d){
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1)/7);
+  return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2,'0')}`;
 }
