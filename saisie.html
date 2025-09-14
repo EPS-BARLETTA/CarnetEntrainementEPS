@@ -3,18 +3,50 @@
 <title>Carnet d’entraînement EPS — Saisie</title><link rel="stylesheet" href="style.css">
 <script src="qrcode.min.js"></script><script src="common.js"></script><script defer src="saisie.js"></script></head>
 <body><div class="wrap">
-<header class="header"><div class="hero-grad"></div><div class="hero"><div class="hero-card">
-<h1 class="title">Étape 2 · Saisie</h1></div></div></header>
+<header class="header"><div class="hero-grad"><div class="hero-card"><h1 class="title">Saisie de la séance</h1><p class="subtitle" id="who"></p></div></div></header>
 <main class="shell">
-<section class="card">
-<div id="dyn_fields"></div>
-<div class="actions" style="margin-top:12px">
-<button id="save" class="btn cta">Enregistrer + QR</button>
-<button id="export_csv" class="btn alt">Exporter CSV</button>
-<input type="file" id="import_csv" style="display:none"><label class="btn alt" for="import_csv">Réimporter CSV</label>
-<a class="btn alt" href="rapport.html">Bilan PDF</a>
-</div>
-</section>
-<section id="qr_card" class="card" style="display:none"><h2>QR de la séance</h2><div id="qr" class="qr"></div></section>
-<section class="card"><h2>Mes séances</h2><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div></section>
-</main><footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer></div></body></html>
+  <section class="card">
+    <h2 class="section-title">AFL2 — Performance / Mesurable</h2>
+    <div id="afl2" class="row"></div>
+  </section>
+  <section class="card">
+    <h2 class="section-title">AFL3 — Projet / Stratégie / Régulation</h2>
+    <div id="afl3" class="row"></div>
+    <div class="field">
+      <label>Notes libres (compte dans le QR — reste concis)</label>
+      <textarea id="notes" placeholder="Objectifs, réglages, ressenti..."></textarea>
+      <div class="helper">Évite les pavés (le QR a une capacité limitée).</div>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="section-title">QR de la séance</h2>
+    <div class="row">
+      <div class="field">
+        <label>Charge du QR (taille du message)</label>
+        <div class="progress"><span id="qr_bar"></span></div>
+        <div id="qr_info" class="helper">0 / 2000 octets</div>
+        <div id="qr_warn" class="note-warn" style="display:none">Beaucoup d’info — pense à alléger tes notes.</div>
+        <div id="qr_error" class="note-danger" style="display:none">Trop long pour un scan fiable. Raccourcis les notes.</div>
+      </div>
+    </div>
+    <div id="qr" class="qr"></div>
+    <div class="actions" style="margin-top:10px">
+      <button id="save" class="btn cta">Enregistrer + Générer QR</button>
+      <button id="download_qr" class="btn ghost">Télécharger le QR</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Mes séances</h2>
+    <div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  </section>
+
+  <div class="toolbar">
+    <button id="export_csv" class="btn ghost">Exporter CSV</button>
+    <label class="btn ghost" for="import_csv">Réimporter CSV</label><input id="import_csv" type="file" accept=".csv" style="display:none">
+    <a class="btn alt" href="rapport.html">Bilan PDF</a>
+    <a class="btn ghost" href="identite.html">Changer d’identité</a>
+  </div>
+</main>
+<footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</div></body></html>

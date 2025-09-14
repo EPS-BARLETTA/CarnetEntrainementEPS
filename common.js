@@ -1,20 +1,34 @@
 
-function keyBy(eleve){ return `cahier_eps:${eleve.nom}:${eleve.prenom}:${eleve.classe}:${eleve.trimestre}`; }
-function loadCahier(eleve){
-  const raw = localStorage.getItem(keyBy(eleve));
+function keyByName(nom, prenom, classe, tri){ return `cahier_eps:${nom}:${prenom}:${classe}:${tri}`; }
+function loadCahier(nom, prenom, classe, tri){
+  const raw = localStorage.getItem(keyByName(nom, prenom, classe, tri));
   if (!raw) return {meta:{}, seances:[]};
-  return JSON.parse(raw);
+  try { return JSON.parse(raw); } catch(e){ return {meta:{}, seances:[]}; }
 }
-function saveCahier(eleve,data){
-  localStorage.setItem(keyBy(eleve), JSON.stringify(data));
+function saveCahier(nom, prenom, classe, tri, data){
+  data.meta = {...(data.meta||{}), updated_at:new Date().toISOString()};
+  localStorage.setItem(keyByName(nom, prenom, classe, tri), JSON.stringify(data));
 }
 function toCSV(rows){
   if(!rows.length) return "";
   const headers = Array.from(new Set(rows.flatMap(r=>Object.keys(r))));
-  return [headers.join(","),...rows.map(r=>headers.map(h=>r[h]||"").join(","))].join("\n");
+  const esc=v=>(v==null?"":String(v).replace(/"/g,'""'));
+  return [headers.join(","), ...rows.map(r=>headers.map(h=>`"${esc(r[h])}"`).join(","))].join("\n");
 }
 function fromCSV(text){
   const lines = text.split(/\r?\n/).filter(Boolean);
-  const headers = lines[0].split(",");
-  return lines.slice(1).map(l=>{const vals=l.split(",");let o={};headers.forEach((h,i)=>o[h]=vals[i]);return o;});
+  if(!lines.length) return [];
+  const headers = lines[0].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+  const rows = [];
+  for (let i=1;i<lines.length;i++){
+    const cols = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+    const obj = {};
+    headers.forEach((h,idx)=>{
+      const key = h.replace(/^"|"$/g,"");
+      const val = (cols[idx]||"").replace(/^"|"$/g,"").replace(/""/g,'"');
+      obj[key] = val;
+    });
+    rows.push(obj);
+  }
+  return rows;
 }
