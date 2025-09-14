@@ -1,5 +1,5 @@
 
-const QR_MAX = 2000;
+const QR_MAX = 2000; // indicatif (QR v~10 M)
 function keyBy(nom, prenom, classe, tri){ return `cahier_eps:${nom}:${prenom}:${classe}:${tri}`; }
 function loadCahier(nom, prenom, classe, tri){
   const raw = localStorage.getItem(keyBy(nom, prenom, classe, tri));

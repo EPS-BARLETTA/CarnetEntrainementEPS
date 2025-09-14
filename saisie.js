@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     if(!rows.length){ alert("Aucune séance à exporter."); return; }
     const csv = toCSV(rows);
     const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `CarnetEPS_${nom}_${prenom}_${classe}_${tri}.csv`; a.click();
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `CarnetEPS_${nom}_${prenom}_${classe}_{tri}.csv`.replace("{tri}", tri); a.click();
     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
     alert("Astuce : enregistre le CSV « Sur mon iPad » (pas iCloud).");
   });
