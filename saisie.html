@@ -11,34 +11,43 @@
 </head>
 <body>
   <div class="wrap">
-    <main class="centered">
-      <div class="shell">
-        <section class="card">
-          <h2 id="titre">Séance — <span id="apsa_name"></span></h2>
-          <div class="helper" id="who"></div>
-          <div id="dyn_fields" class="row"></div>
-          <div class="actions">
-            <button id="save" class="btn ok">Enregistrer + QR</button>
-            <button id="export_csv" class="btn ghost">Exporter CSV</button>
-            <label class="btn ghost" for="import_csv">Réimporter CSV</label>
-            <input id="import_csv" type="file" accept=".csv" style="display:none">
-            <a class="btn ghost" href="rapport.html">Bilan PDF</a>
-          </div>
-        </section>
-
-        <section id="qr_card" class="card" style="display:none">
-          <h2>QR de la séance</h2>
-          <div id="qr" class="qr"></div>
-        </section>
-
-        <section class="card">
-          <h2>Mes séances</h2>
-          <div class="table-wrap">
-            <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
-          </div>
-        </section>
+    <header class="header">
+      <div class="hero-grad"></div>
+      <div class="hero">
+        <div class="hero-card">
+          <h1 class="title">Étape 2 · Saisie</h1>
+          <p class="subtitle">Renseigne ta séance — un QR sera généré.</p>
+        </div>
       </div>
+    </header>
+
+    <main class="shell">
+      <section class="card">
+        <h2 id="titre">Séance — <span id="apsa_name"></span></h2>
+        <p class="subtitle" id="who" style="text-align:left"></p>
+        <div id="dyn_fields" class="row"></div>
+        <div class="actions" style="margin-top:12px">
+          <button id="save" class="btn cta">Enregistrer + QR</button>
+          <button id="export_csv" class="btn glass">Exporter CSV</button>
+          <label class="btn glass" for="import_csv">Réimporter CSV</label>
+          <input id="import_csv" type="file" accept=".csv" style="display:none">
+          <a class="btn alt" href="rapport.html">Bilan PDF</a>
+        </div>
+      </section>
+
+      <section id="qr_card" class="card" style="display:none">
+        <h2>QR de la séance</h2>
+        <div id="qr" class="qr"></div>
+      </section>
+
+      <section class="card">
+        <h2>Mes séances</h2>
+        <div class="table-wrap">
+          <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+        </div>
+      </section>
     </main>
+
     <footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
   </div>
 </body>

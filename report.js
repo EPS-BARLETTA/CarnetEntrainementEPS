@@ -10,12 +10,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const rows = data.seances || [];
     const resume = document.getElementById("resume"); resume.innerHTML="";
     const div = document.createElement("div");
-    const activites = [...new Set(rows.map(r=>r["Activité"]))];
-    div.className="card"; // nested card look
+    div.className="card";
     div.style.padding="12px";
+    const activites = [...new Set(rows.map(r=>r["Activité"]))];
     div.innerHTML = `<div><strong>ID :</strong> ${id}</div>
                      <div><strong>Trimestre :</strong> ${tri}</div>
-                     <div><strong>Séances :</strong> ${rows.length}</div>
+                     <div><strong>Nb séances :</strong> ${rows.length}</div>
                      <div><strong>Activités :</strong> ${activites.join(", ")||"-"}</div>`;
     resume.appendChild(div);
 
@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
         headers.forEach(h=>{ const td=document.createElement("td"); td.textContent=r[h]??""; tr.appendChild(td); });
         tbody.appendChild(tr);
       });
-    } else {
-      thead.innerHTML = "<tr><th>Info</th></tr>";
-      tbody.innerHTML = "<tr><td>Aucune séance.</td></tr>";
+    }else{
+      thead.innerHTML="<tr><th>Info</th></tr>";
+      tbody.innerHTML="<tr><td>Aucune séance.</td></tr>";
     }
     document.getElementById("preview").style.display="block";
     window.scrollTo({top:document.body.scrollHeight, behavior:"smooth"});

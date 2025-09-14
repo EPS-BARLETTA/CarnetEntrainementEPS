@@ -10,34 +10,43 @@
 </head>
 <body>
   <div class="wrap">
-    <main class="centered">
-      <div class="shell">
-        <section class="card">
-          <h2>Bilan de fin de trimestre</h2>
-          <div class="row">
-            <div class="field"><label>ID élève</label><input id="eleve_id" placeholder="VAU-T25-TLE1-012"></div>
-            <div class="field"><label>Trimestre</label><input id="trimestre" value="T1-2025"></div>
-          </div>
-          <div class="actions">
-            <button id="build" class="btn primary">Générer l’aperçu</button>
-            <button id="print" class="btn ghost">Exporter PDF</button>
-            <a class="btn ghost" href="saisie.html">Retour à la saisie</a>
-          </div>
-        </section>
-
-        <section id="preview" class="card" style="display:none">
-          <h2>Aperçu</h2>
-          <div id="resume" class="row"></div>
-          <div class="table-wrap" style="margin-top:10px">
-            <table>
-              <thead id="thead"></thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-          <p class="helper">Utilisez “Exporter PDF” puis choisissez “Enregistrer en PDF”.</p>
-        </section>
+    <header class="header">
+      <div class="hero-grad"></div>
+      <div class="hero">
+        <div class="hero-card">
+          <h1 class="title">Étape 3 · Bilan PDF</h1>
+          <p class="subtitle">Prépare ton récap’ trimestriel et exporte-le en PDF.</p>
+        </div>
       </div>
+    </header>
+
+    <main class="shell">
+      <section class="card">
+        <h2>Paramètres</h2>
+        <div class="row">
+          <div class="field"><label>ID élève</label><input id="eleve_id" placeholder="VAU-T25-TLE1-012"></div>
+          <div class="field"><label>Trimestre</label><input id="trimestre" value="T1-2025"></div>
+        </div>
+        <div class="actions" style="margin-top:12px">
+          <button id="build" class="btn alt">Générer l’aperçu</button>
+          <button id="print" class="btn glass">Exporter PDF</button>
+          <a class="btn glass" href="saisie.html">Retour</a>
+        </div>
+      </section>
+
+      <section id="preview" class="card" style="display:none">
+        <h2>Aperçu</h2>
+        <div class="row" id="resume"></div>
+        <div class="table-wrap" style="margin-top:10px">
+          <table>
+            <thead id="thead"></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <p class="subtitle">Menu Imprimer → “Enregistrer en PDF”.</p>
+      </section>
     </main>
+
     <footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
   </div>
 </body>
