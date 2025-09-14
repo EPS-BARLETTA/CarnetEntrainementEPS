@@ -1,20 +1,15 @@
 <!DOCTYPE html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QR test (Canvas)</title><link rel="stylesheet" href="style.css"></head>
+<title>QR test (SVG)</title><link rel="stylesheet" href="style.css"></head>
 <body>
 <div class="center"><div class="container"><div class="card" style="text-align:center">
-  <div class="nav"><a href="index.html">Accueil</a><a href="qr.html">QR</a></div>
-  <h2>QR de test (Canvas)</h2>
-  <div class="qr"><canvas id="test" width="320" height="320"></canvas></div>
-  <p class="helper">Si tu vois un motif noir et blanc, le Canvas s'affiche bien.</p>
+  <div class="nav"><a href="index.html">Accueil</a></div>
+  <h2>QR de test (HELLO)</h2>
+  <div id="qrc" class="qr"></div>
 </div></div></div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
 <script>
-{qrious_min}
-var qr = new QRious();
-qr.update({ value: 'HELLO', size: 320, level: 'M', background: 'rgba(0,0,0,0)', foreground: '#000' });
-var cvs = document.getElementById('test');
-var ctx = cvs.getContext('2d');
-ctx.drawImage(qr.toCanvas(),0,0,320,320);
+{qrcode_min}
+new SVGQRCode(document.getElementById('qrc'), {width:320,height:320}).makeCode('HELLO');
 </script>
 </body></html>
