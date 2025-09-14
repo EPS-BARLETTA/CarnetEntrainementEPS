@@ -1,9 +1,0 @@
-{
-  "name": "Carnet Entra\u00eenement EPS",
-  "short_name": "Carnet EPS",
-  "start_url": "/CarnetEntrainementEPS/index.html",
-  "display": "standalone",
-  "background_color": "#0b1324",
-  "theme_color": "#0b1324",
-  "icons": []
-}
