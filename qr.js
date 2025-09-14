@@ -20,9 +20,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
     return payload || "{}";
   }
   const payload = getPayload();
+  const utf8 = toUTF8(payload);
   const container = document.getElementById("qrc");
   const preview = document.getElementById("payload_preview");
+  const diag = document.getElementById("diag_bytes");
   preview.textContent = payload;
+  diag.textContent = `Taille JSON: ${new Blob([payload]).size} octets (UTF‑8)`;
   container.innerHTML = "";
   function ensureQRCode(){
     if(typeof QRCode === "undefined"){
@@ -30,7 +33,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       return;
     }
     try{
-      new QRCode(container, { text: payload, width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M });
+      new QRCode(container, { text: utf8, width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M });
     }catch(e){
       container.textContent = "Erreur de génération du QR.";
     }

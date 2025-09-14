@@ -1,5 +1,5 @@
 
-const QR_MAX = 2000; // indicatif (QR v~10 M)
+const QR_MAX = 2000;
 function keyBy(nom, prenom, classe, tri){ return `cahier_eps:${nom}:${prenom}:${classe}:${tri}`; }
 function loadCahier(nom, prenom, classe, tri){
   const raw = localStorage.getItem(keyBy(nom, prenom, classe, tri));
@@ -49,3 +49,5 @@ function makeBadge(element, used){
   else element.classList.add("red");
   element.textContent = `${used} / ${QR_MAX} octets`;
 }
+// Force UTF-8 for qrcodejs
+function toUTF8(str){ try { return unescape(encodeURIComponent(str)); } catch(e){ return str; } }
