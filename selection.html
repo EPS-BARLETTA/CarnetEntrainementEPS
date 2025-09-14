@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carnet d’entraînement EPS — Sélection</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <script defer src="js/selection.js"></script>
+</head>
+<body>
+  <div class="brandbar">
+    <div class="brand">
+      <img class="logo" src="assets/logo.svg" alt="logo">
+      <h1>Carnet d’entraînement EPS — Sélection</h1>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="card">
+      <div class="step">
+        <div class="dot active">1</div><div>Identité & Activité</div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>ID élève</label>
+          <input id="eleve_id" placeholder="VAU-T25-TLE1-012">
+          <div class="helper">Recommandé : code fourni par le prof (Établissement–Année–Classe–N°).</div>
+        </div>
+        <div class="field"><label>Trimestre</label><input id="trimestre" value="T1-2025"></div>
+        <div class="field"><label>Nom</label><input id="nom" placeholder="DURAND"></div>
+        <div class="field"><label>Prénom</label><input id="prenom" placeholder="Emma"></div>
+        <div class="field"><label>Classe</label><input id="classe" placeholder="Tle1"></div>
+        <div class="field"><label>Sexe</label>
+          <select id="sexe"><option value="F">F</option><option value="M">M</option></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Choisir l’activité (APSA)</h2>
+      <div class="chips" id="chips">
+        <button class="chip active" data-apsa="Demi-fond">Demi-fond</button>
+        <button class="chip" data-apsa="Natation">Natation</button>
+        <button class="chip" data-apsa="Escalade">Escalade</button>
+        <button class="chip" data-apsa="Danse">Danse</button>
+        <button class="chip" data-apsa="Badminton">Badminton</button>
+        <button class="chip" data-apsa="Football">Football</button>
+        <button class="chip" data-apsa="Volley">Volley</button>
+        <button class="chip" data-apsa="Musculation">Musculation</button>
+      </div>
+      <div class="actions">
+        <button id="go" class="btn primary">Aller à la saisie</button>
+        <a class="btn soft" href="index.html">Retour</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><small>Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</small></footer>
+</body>
+</html>

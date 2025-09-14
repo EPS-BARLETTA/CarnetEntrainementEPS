@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carnet d’entraînement EPS — Saisie</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="js/common.js"></script>
+  <script src="assets/qrcode.min.js"></script>
+  <script defer src="js/saisie.js"></script>
+</head>
+<body>
+  <div class="brandbar">
+    <div class="brand">
+      <img class="logo" src="assets/logo.svg" alt="logo">
+      <h1>Carnet d’entraînement EPS — Saisie</h1>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="card">
+      <div class="step"><div class="dot">1</div><div>Identité</div><div class="dot active">2</div><div>Saisie séance</div><div class="dot">3</div><div>QR</div></div>
+      <div class="helper" id="who"></div>
+    </section>
+
+    <section class="card">
+      <h2 id="titre-apsa">Séance — <span id="apsa_name"></span></h2>
+      <div id="dyn_fields" class="row"></div>
+      <div class="actions">
+        <button id="save" class="btn ok">Enregistrer + QR</button>
+        <a class="btn soft" href="selection.html">Retour</a>
+      </div>
+    </section>
+
+    <section id="qr_card" class="card" style="display:none">
+      <h2>QR de la séance</h2>
+      <div id="qr" class="qr"></div>
+      <div class="helper">Montrez ce QR à l’enseignant pour l’ajouter à ScanProf.</div>
+    </section>
+  </main>
+
+  <footer class="footer"><small>Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</small></footer>
+</body>
+</html>
