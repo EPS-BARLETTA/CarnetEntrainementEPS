@@ -1,1 +1,13 @@
-...
+const SEC_DATA = {"general": ["Échauffement progressif (10–20 min), mobilité & activation.", "Hydratation régulière avant/pendant/après l’effort.", "Chaussures/équipements adaptés à l’activité.", "Respect des consignes du professeur et des partenaires.", "Arrêt si douleur, étourdissement ou gêne anormale."], "Demi-fond": ["Hydratation régulière (≈120–240 ml toutes les 15–20 min selon chaleur/intensité).", "Progressivité de l’allure, éviter les départs trop rapides, surveiller la chaleur.", "Courir en sécurité (trajets connus, visibilité, pas d’écouteurs forts)."], "Natation": ["Respect des règles du bassin, circulation, plongeons uniquement autorisés.", "Jamais seul : surveillance/enseignant, test d’aisance, respect des lignes.", "Matériel ajusté (bonnet, lunettes), hydratation même en piscine."], "Escalade": ["Contrôles croisés : harnais, nœud, système d’assurage, mousqueton.", "Communication claire grimpeur/assureur (consignes standardisées).", "Assureur attentif, zone dégagée, respect des trajectoires."], "Danse": ["Échauffement articulaire global + spécifique (chevilles, hanches, rachis).", "Surface adaptée, espace dégagé ; chaussures/sneakers propres si requises.", "Progressivité des amplitudes et des sauts, récupération suffisante."], "Badminton": ["Chaussures indoor avec bon maintien, échauffement pied/cheville.", "Appuis/arrêts maîtrisés, éviter les collisions (appels clairs).", "Hydratation et pauses, adapter l’intensité à la forme du jour."], "Football": ["Échauffement structuré type FIFA 11+ (course, renforcement, appuis).", "Protège-tibias, chaussures adaptées ; respect du contact & fair-play.", "Hydratation et gestion de la chaleur, pauses prévues."], "Volley": ["Genouillères/chevilles protégées, chaussures amortissantes.", "Apprentissage des réceptions/placements pour limiter entorses.", "Communication d’équipe (appel de balle) pour éviter collisions."], "Musculation": ["Charges adaptées, progression graduelle, technique avant la charge.", "Pareur/spotter pour mouvements à risque (développé couché, squat).", "Sécurité : clips de barre, aire libre, pas d’effort maximal sans encadrement."]};
+document.addEventListener("DOMContentLoaded", ()=>{
+  const ulG = document.getElementById("sec_general");
+  SEC_DATA.general.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ulG.appendChild(li); });
+  const select = document.getElementById("apsa_select");
+  const ulA = document.getElementById("sec_apsa");
+  function renderApsa(){
+    const list = SEC_DATA[select.value]||[];
+    ulA.innerHTML=""; list.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ulA.appendChild(li); });
+  }
+  select.addEventListener("change", renderApsa);
+  renderApsa();
+});
