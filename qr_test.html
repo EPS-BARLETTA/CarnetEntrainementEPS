@@ -1,0 +1,16 @@
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR test (HELLO)</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="center"><div class="container"><div class="card" style="text-align:center">
+  <div class="nav"><a href="index.html">Accueil</a><a href="qr.html">QR</a></div>
+  <h2>QR de test</h2>
+  <div id="qrc" class="qr"></div>
+  <p class="helper">Tu dois voir un QR contenant le texte: <code>HELLO</code></p>
+</div></div></div>
+<div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
+<script>
+{qrcode_min_js}
+new QRCode(document.getElementById('qrc'), { text: 'HELLO', width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M });
+</script>
+</body></html>
