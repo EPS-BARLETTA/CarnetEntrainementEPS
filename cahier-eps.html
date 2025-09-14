@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CahierEPS — Espace élève</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="assets/qrcode.min.js"></script>
+  <script defer src="js/cahier-eps.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <h1>Espace élève — Cahier d’entraînement</h1>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Identité</h2>
+      <div class="row">
+        <div class="field"><label>ID élève</label><input id="eleve_id" placeholder="VAU-TLE-012"></div>
+        <div class="field"><label>Trimestre</label><input id="trimestre" value="T1-2025"></div>
+        <div class="field"><label>Nom</label><input id="nom" placeholder="DURAND"></div>
+        <div class="field"><label>Prénom</label><input id="prenom" placeholder="Emma"></div>
+        <div class="field"><label>Classe</label><input id="classe" placeholder="Tle1"></div>
+        <div class="field"><label>Sexe</label>
+          <select id="sexe"><option value="F">F</option><option value="M">M</option></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn_load" class="btn primary">Charger / Créer mon cahier</button>
+        <a class="btn" href="index.html">Accueil</a>
+        <a class="btn" href="fiche-securite.html">Fiche sécurité</a>
+        <span class="badge">Conseil : conservez le même ID et Trimestre.</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Nouvelle séance</h2>
+      <div class="row">
+        <div class="field">
+          <label>Activité (APSA)</label>
+          <select id="activite">
+            <option>Demi-fond</option>
+            <option>Natation</option>
+            <option>Escalade</option>
+            <option>Danse</option>
+            <option>Badminton</option>
+            <option>Football</option>
+            <option>Volley</option>
+            <option>Musculation</option>
+          </select>
+        </div>
+      </div>
+      <div id="dyn_fields" class="row"></div>
+      <div class="actions">
+        <button id="btn_save_seance" class="btn success">Enregistrer la séance + Afficher le QR</button>
+        <span id="counter" class="badge">0 séance</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Mes séances (tap pour voir QR)</h2>
+      <div class="small">Exportez régulièrement votre CSV/JSON pour sauvegarder dans Fichiers (iPad).</div>
+      <div class="actions">
+        <button id="btn_export_csv" class="btn">Exporter CSV</button>
+        <button id="btn_export_json" class="btn">Exporter JSON</button>
+      </div>
+      <div style="overflow:auto">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="qr_section" class="card hidden">
+      <h2>QR de la séance (à faire scanner par l’enseignant)</h2>
+      <div class="qr-wrap" id="qr_host"></div>
+      <details style="margin-top:8px">
+        <summary>Voir le contenu (JSON)</summary>
+        <pre id="qr_text" class="small"></pre>
+      </details>
+    </section>
+  </main>
+
+  <footer class="foot">© 2025 — Vauban EPS — CahierEPS</footer>
+</body>
+</html>
