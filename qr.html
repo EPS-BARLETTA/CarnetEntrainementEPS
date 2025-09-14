@@ -1,10 +1,13 @@
 <!DOCTYPE html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Carnet d’entraînement EPS — QR (SVG)</title><link rel="stylesheet" href="style.css"></head>
+<title>Carnet d’entraînement EPS — QR (SVG via CDN)</title><link rel="stylesheet" href="style.css">
+<!-- Librairie fiable depuis CDNJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+</head>
 <body>
 <div class="center"><div class="container"><div class="card" style="text-align:center">
   <div class="nav"><a href="index.html">Accueil</a><a href="identite.html">Identité</a><a href="saisie.html">Séance</a><a href="qr_test.html">QR test</a></div>
-  <h2>QR de la séance</h2>
+  <h2>QR de la séance (SVG)</h2>
   <div id="qrc" class="qr"></div>
   <div class="field"><label>Aperçu du JSON</label><div id="payload_preview" class="readonly"></div><p class="helper"><span id="diag"></span></p></div>
   <div class="actions">
@@ -14,51 +17,8 @@
 </div></div></div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
 <script>
-/* qrcode-generator (min, SVG only used) */
-!function(){function n(n,t){this._el=n,this._htOption=t||{},this._htOption.width=this._htOption.width||256,this._htOption.height=this._htOption.height||256,this._htOption.correctLevel=this._htOption.correctLevel||i.M}
-function t(n){this.mode=o.MODE_8BIT_BYTE,this.data=n}
-function e(n,t){this.typeNumber=n,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}
-function r(n,t){if(void 0==n.length)throw new Error(n.length+"/"+t);for(var e=0;e<n.length&&0==n[e];)e++;this.num=new Array(n.length-e+t);for(var r=0;r<n.length-e;r++)this.num[r]=n[r+e]}
-function u(n,t){this.totalCount=n,this.dataCount=t}
-var o={};o.MODE_NUMBER=1,o.MODE_ALPHA_NUM=2,o.MODE_8BIT_BYTE=4,o.MODE_KANJI=8;
-var i={L:1,M:0,Q:3,H:2};
-var a={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58]] ,G15:1335,G18:7973,G15_MASK:21522,
-getBCHDigit:function(n){for(var t=0;0!=n;)t++,n>>>=1;return t},
-getBCHTypeInfo:function(n){for(var t=n<<10;0<=a.getBCHDigit(t)-a.getBCHDigit(a.G15);)t^=a.G15<<a.getBCHDigit(t)-a.getBCHDigit(a.G15);return n<<10|t},
-getBCHTypeNumber:function(n){for(var t=n<<12;0<=a.getBCHDigit(t)-a.getBCHDigit(a.G18);)t^=a.G18<<a.getBCHDigit(t)-a.getBCHDigit(a.G18);return n<<12|t},
-getPatternPosition:function(n){return a.PATTERN_POSITION_TABLE[n-1]},
-getMask:function(n,t){switch(n){case 0:return(t%2+Math.floor(t/2)%2)%2==0;case 1:return t%2==0;case 2:return Math.floor(t/2)%2==0;case 3:return(t%2+Math.floor(t/2)%2)%2==0;case 4:return(t%3+Math.floor(t/3)%2)%2==0;case 5:return(t%3+t%2)%2==0;case 6:return(t%3+Math.floor(t/2)%2)%2==0;case 7:return(t%3+t+Math.floor(t/2)%2)%2==0;default:throw new Error("bad mask:"+n)}},
-getErrorCorrectPolynomial:function(n){for(var t=new r([1],0),e=0;e<n;e++)t=t.multiply(new r([1,Math.pow(2,e)],0));return t},glog:function(n){if(n<1)throw new Error("glog("+n+")");return a.LOG_TABLE[n]},gexp:function(n){for(;n<0;)n+=255;for(;n>=256;)n-=255;return a.EXP_TABLE[n]},
-LOG_TABLE:new Array(256),EXP_TABLE:new Array(256)};
-for(var s=0;s<8;s++)a.EXP_TABLE[s]=1<<s;for(s=8;s<256;s++)a.EXP_TABLE[s]=a.EXP_TABLE[s-4]^a.EXP_TABLE[s-5]^a.EXP_TABLE[s-6]^a.EXP_TABLE[s-8];for(s=0;s<255;s++)a.LOG_TABLE[a.EXP_TABLE[s]]=s;
-r.prototype={get:function(n){return this.num[n]},getLength:function(){return this.num.length},multiply:function(n){for(var t=new Array(this.getLength()+n.getLength()-1),e=0;e<this.getLength();e++)for(var r=0;r<n.getLength();r++)t[e+r]^=a.gexp(a.glog(this.get(e))+a.glog(n.get(r)));return new r(t,0)},
-mod:function(n){if(this.getLength()-n.getLength()<0)return this;for(var t=a.glog(this.get(0))-a.glog(n.get(0)),e=new Array(this.getLength()),u=0;u<this.getLength();u++)e[u]=this.get(u);for(u=0;u<n.getLength();u++)e[u]^=a.gexp(a.glog(n.get(u))+t);return new r(e,0).mod(n)}};
-var l={getRSBlocks:function(n,t){var e=[null,
-[new u(19,7)],[new u(34,10)],[new u(55,15)],[new u(80,20)],[new u(108,26)],[new u(136,18)],[new u(156,20)],[new u(194,24)],[new u(232,30)],[new u(274,18)],[new u(324,20)]];
-return e[n]} };
-function c(n,t){for(var e=0;e<t.length&&0==n.getLengthInBits()%8;)n.put(t[e],8),e++;}
-function f(n,t){this.buffer=[],this.length=0}
-f.prototype={get:function(n){var t=Math.floor(n/8);return 1==(this.buffer[t]>>>7-n%8&1)},put:function(n,t){for(var e=0;e<t;e++)this.putBit(1==(n>>>t-e-1&1))},getLengthInBits:function(){return this.length},putBit:function(n){var t=Math.floor(this.length/8);this.buffer.length<=t&&this.buffer.push(0),n&&(this.buffer[t]|=128>>>this.length%8),this.length++}};
-e.prototype={addData:function(n){this.dataList.push(new t(n)),this.dataCache=null},
-make:function(){if(this.typeNumber<1)this.typeNumber=1;this.dataCache=h.createData(this.typeNumber,this.errorCorrectLevel,this.dataList),this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);
-for(var n=0;n<this.moduleCount;n++){this.modules[n]=new Array(this.moduleCount);for(var t=0;t<this.moduleCount;t++)this.modules[n][t]=null}h.setupPositionProbePattern(this,0,0),h.setupPositionProbePattern(this,this.moduleCount-7,0),h.setupPositionProbePattern(this,0,this.moduleCount-7),
-h.setupPositionAdjustPattern(this),h.setupTimingPattern(this),h.setupTypeInfo(this,!1),this.typeNumber>=7&&h.setupTypeNumber(this,!1),h.mapData(this,this.dataCache)},
-isDark:function(n,t){return this.modules[n][t]},getModuleCount:function(){return this.moduleCount}};
-var h={createData:function(n,t,e){for(var r=new f,u=0;u<e.length;u++){var o=e[u];r.put(4,4),r.put(o.data.length,8);for(var i=0;i<o.data.length;i++)r.put(o.data.charCodeAt(i),8)}var a=h.getBestTypeNumber(r,t,n);n=a;var s=l.getRSBlocks(n,t),c=new f;
-for(u=0;u<s.length;u++)c.put(4,4),c.put(e[u].data.length,8),c.buffer=c.buffer.concat(e[u].data.split("").map(function(n){return n.charCodeAt(0)})),c.length=r.length;
-return d(s,c,h.getMaxDataCount(s))},
-getBestTypeNumber:function(n,t,e){for(var r=1;r<=11;r++){var u=l.getRSBlocks(r,t),o=h.getMaxDataCount(u);if(o>=Math.ceil(n.getLengthInBits()/8))return r}return 11},
-getMaxDataCount:function(n){var t=0;for(var e=0;e<n.length;e++)t+=n[e].dataCount;return t},
-setupPositionProbePattern:function(n,t,e){for(var r=-1;r<=7;r++)if(!(t+r<=-1||n.moduleCount<=t+r))for(var u=-1;u<=7;u++)e+u<=-1||n.moduleCount<=e+u||(n.modules[t+r][e+u]=r>=0&&r<=6&&(0==u||6==u)||u>=0&&u<=6&&(0==r||6==r)||r>=2&&r<=4&&u>=2&&u<=4)},
-setupPositionAdjustPattern:function(n){for(var t=a.getPatternPosition(n.typeNumber),e=0;e<t.length;e++)for(var r=0;r<t.length;r++){var u=t[e],o=t[r];if(null==n.modules[u][o])for(var i=-2;i<=2;i++)for(var s=-2;s<=2;s++)n.modules[u+i][o+s]=i== -2||i==2||s==-2||s==2||0==i&&0==s}},
-setupTimingPattern:function(n){for(var t=8;t<n.moduleCount-8;t++)null==n.modules[t][6]&&(n.modules[t][6]=t%2==0),null==n.modules[6][t]&&(n.modules[6][t]=t%2==0)},
-setupTypeNumber:function(n,t){for(var e=a.getBCHTypeNumber(n.typeNumber),r=0;r<18;r++){var u=!t&&1==(e>>r&1);n.modules[Math.floor(r/3)][r%3+n.moduleCount-8-3]=u,n.modules[r%3+8][Math.floor(r/3)]=u}},
-setupTypeInfo:function(n,t){for(var e=a.getBCHTypeInfo(i.M<<3|0),r=0;r<15;r++){var u=!t&&1==(e>>r&1);r<6?n.modules[r][8]=u:r<8?n.modules[r+1][8]=u:n.modules[n.moduleCount-15+r][8]=u}for(r=0;r<15;r++){u=!t&&1==(e>>r&1);r<8?n.modules[8][n.moduleCount-r-1]=u:r<9?n.modules[8][15-r-1+1]=u:n.modules[8][15-r-1]=u}},
-mapData:function(n,t){for(var e=-1,r=n.moduleCount-1,u=7,o=0,i=!1;r>0;r-=2){6==r&&r--;for(;;){for(var a=0;a<2;a++)if(null==n.modules[r-a][e]){var s=!1;o<t.length&&(s=1==(t[o]>>>u&1)),h.isMasked(r-a,e,0)?n.modules[r-a][e]=!s:n.modules[r-a][e]=s,o++,u==-1&&(u=7)}if(i){if(e++,e==n.moduleCount)break}else if((e--,-1==e))break}i=!i}},
-isMasked:function(n,t,e){return a.getMask(e,n,t)}};
-n.prototype.makeCode=function(n){var r=new e(0,i.M);r.addData(n),r.make();for(var u=r.getModuleCount(),o='<svg xmlns="http://www.w3.org/2000/svg" width="'+(this._htOption.width)+'" height="'+(this._htOption.height)+'" viewBox="0 0 '+u+" "+u+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="white"/>',s=0;s<u;s++)for(var l=0;l<u;l++)r.isDark(s,l)&&(o+='<rect x="'+l+'" y="'+s+'" width="1" height="1" fill="black"/>');o+="</svg>",this._el.innerHTML=o};
-window.SVGQRCode=n;}();
-
+function bytes(s){ return new Blob([s]).size; }
+function diag(s){ document.getElementById('diag').textContent = s; }
 function getPayload(){
   var p = sessionStorage.getItem('ceps:qr_payload')||'';
   if(!p){
@@ -72,19 +32,18 @@ function getPayload(){
   if(!p) p = JSON.stringify({INFO:'Test',NOTE:'Page QR ouverte sans séance.'});
   return p;
 }
-function diag(s){ document.getElementById('diag').textContent = s; }
-function bytes(s){ return new Blob([s]).size; }
-function downloadSVG(){
-  const svg = document.querySelector('#qrc svg'); if(!svg) return alert('Pas de SVG.');
-  const blob = new Blob([svg.outerHTML], {type:'image/svg+xml'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='QR_Seance.svg'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
 function render(){
   var payload = getPayload();
   document.getElementById('payload_preview').textContent = payload;
   diag('Octets: '+bytes(payload));
-  var box = document.getElementById('qrc'); box.innerHTML='';
-  try{ new SVGQRCode(box, {width:320,height:320}).makeCode(payload); }catch(e){ box.textContent='Erreur QR: '+e.message; }
+  var q = qrcode(0, 'M'); // version auto, ECC M
+  q.addData(payload); q.make();
+  document.getElementById('qrc').innerHTML = q.createSvgTag(6,0);
+}
+function downloadSVG(){
+  const svg = document.querySelector('#qrc svg'); if(!svg) return alert('Pas de SVG.');
+  const blob = new Blob([svg.outerHTML], {type:'image/svg+xml'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='QR_Seance.svg'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 window.addEventListener('load', render);
 </script>

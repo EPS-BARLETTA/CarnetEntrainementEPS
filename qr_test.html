@@ -1,6 +1,8 @@
 <!DOCTYPE html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QR test (SVG)</title><link rel="stylesheet" href="style.css"></head>
+<title>QR test (SVG via CDN)</title><link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+</head>
 <body>
 <div class="center"><div class="container"><div class="card" style="text-align:center">
   <div class="nav"><a href="index.html">Accueil</a></div>
@@ -9,7 +11,7 @@
 </div></div></div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
 <script>
-{qrcode_min}
-new SVGQRCode(document.getElementById('qrc'), {width:320,height:320}).makeCode('HELLO');
+var q = qrcode(0,'M'); q.addData('HELLO'); q.make();
+document.getElementById('qrc').innerHTML = q.createSvgTag(6,0);
 </script>
 </body></html>
