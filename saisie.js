@@ -18,6 +18,11 @@ const APSA_FIELDS = {
     {key:"voie", label:"Voie", type:"text"},
     {key:"modalite", label:"Modalité (tête/moulinette)", type:"text"},
     {key:"cotation", label:"Cotation", type:"text"}
+  ],
+  "Danse": [
+    {key:"date", label:"Date", type:"date", required:true},
+    {key:"role", label:"Rôle (chorégraphe/interprète)", type:"text"},
+    {key:"repetition_min", label:"Répétition (min)", type:"number"}
   ]
 };
 
@@ -33,9 +38,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("who").textContent = `${nom} ${prenom} — ${classe} — ${tri}`;
   document.getElementById("apsa_name").textContent = apsa;
 
-  const host = document.getElementById("dyn_fields");
   const fields = APSA_FIELDS[apsa] || [{key:"date",label:"Date",type:"date",required:true},{key:"rpe",label:"RPE (1–10)",type:"number",required:true}];
-  host.innerHTML = "";
+  const host = document.getElementById("dyn_fields"); host.innerHTML="";
   fields.forEach(f=>{
     const wrap = document.createElement("div"); wrap.className="field";
     const lab = document.createElement("label"); lab.textContent = f.label + (f.required?" *":""); wrap.appendChild(lab);
@@ -62,22 +66,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
     fields.forEach(f=>{
       const v = (document.getElementById("f_"+f.key).value||"").trim();
       if (f.required && !v) ok=false;
-      data[f.key]=v;
+      data[f.key] = v;
     });
     if(!ok){ alert("Complète les champs obligatoires."); return; }
-    if(!data.date) data.date=(new Date()).toISOString().slice(0,10);
+    if(!data.date) data.date = (new Date()).toISOString().slice(0,10);
 
     const cahier = loadCahier(id, tri);
     const num = (cahier.seances?.length||0)+1;
     const sid = makeSessionId({eleveId:id,trimestre:tri,date:data.date,activite:apsa});
     const row = {"Source":"CahierEPS","ID":id,"Nom":nom,"Prénom":prenom,"Classe":classe,"Sexe":sexe,"Trimestre":tri,"Séance #":num,"Date":data.date,"Activité":apsa,"Session ID":sid};
-    Object.entries(data).forEach(([k,v])=>{ if(k!=="date") row[k] = v; });
+    Object.entries(data).forEach(([k,v])=>{ if(k!=="date") row[k]=v; });
     cahier.seances = cahier.seances || []; cahier.seances.push(row); saveCahier(id, tri, cahier);
 
     const payload = JSON.stringify(row);
     const canvas = window.QRCodeGen(payload);
-    const hostQR = document.getElementById("qr");
-    hostQR.innerHTML = ""; hostQR.appendChild(canvas);
+    const hostQR = document.getElementById("qr"); hostQR.innerHTML=""; hostQR.appendChild(canvas);
     document.getElementById("qr_card").style.display = "block";
     renderTable();
     window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
@@ -92,18 +95,18 @@ document.addEventListener("DOMContentLoaded", ()=>{
     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   });
 
-  document.getElementById("import_csv").addEventListener("change", (ev)=>{
+  document.getElementById("import_csv").addEventListener("change",(ev)=>{
     const f = ev.target.files?.[0]; if(!f) return;
     const fr = new FileReader();
     fr.onload = ()=>{
       try{
         const rows = fromCSV(fr.result);
         const cahier = loadCahier(id, tri);
-        cahier.seances = rows; // overwrite for simplicité (on peut fusionner plus tard)
+        cahier.seances = rows;
         saveCahier(id, tri, cahier);
         renderTable();
         alert("CSV importé.");
-      }catch(e){ alert("Erreur lecture CSV."); }
+      }catch(e){ alert("Erreur CSV."); }
     };
     fr.readAsText(f);
   });

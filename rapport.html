@@ -3,45 +3,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Carnet d’entraînement EPS — Bilan trimestre</title>
-  <link rel="stylesheet" href="css/theme.css">
+  <title>Carnet d’entraînement EPS — Bilan PDF</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/common.js"></script>
   <script defer src="js/report.js"></script>
 </head>
 <body>
-  <div class="brandbar">
-    <div class="brand">
-      <img class="logo" src="assets/logo.svg" alt="logo">
-      <h1>Carnet d’entraînement EPS — Bilan trimestriel</h1>
-    </div>
+  <div class="wrap">
+    <main class="centered">
+      <div class="shell">
+        <section class="card">
+          <h2>Bilan de fin de trimestre</h2>
+          <div class="row">
+            <div class="field"><label>ID élève</label><input id="eleve_id" placeholder="VAU-T25-TLE1-012"></div>
+            <div class="field"><label>Trimestre</label><input id="trimestre" value="T1-2025"></div>
+          </div>
+          <div class="actions">
+            <button id="build" class="btn primary">Générer l’aperçu</button>
+            <button id="print" class="btn ghost">Exporter PDF</button>
+            <a class="btn ghost" href="saisie.html">Retour à la saisie</a>
+          </div>
+        </section>
+
+        <section id="preview" class="card" style="display:none">
+          <h2>Aperçu</h2>
+          <div id="resume" class="row"></div>
+          <div class="table-wrap" style="margin-top:10px">
+            <table>
+              <thead id="thead"></thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <p class="helper">Utilisez “Exporter PDF” puis choisissez “Enregistrer en PDF”.</p>
+        </section>
+      </div>
+    </main>
+    <footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
   </div>
-
-  <main class="container">
-    <section class="card">
-      <h2>Créer le bilan</h2>
-      <div class="row">
-        <div class="field"><label>ID élève</label><input id="eleve_id" placeholder="VAU-T25-TLE1-012"></div>
-        <div class="field"><label>Trimestre</label><input id="trimestre" value="T1-2025"></div>
-      </div>
-      <div class="actions">
-        <button id="build" class="btn primary">Générer aperçu</button>
-        <button id="print" class="btn soft">Exporter PDF</button>
-        <a class="btn soft" href="index.html">Accueil</a>
-      </div>
-    </section>
-
-    <section id="preview" class="card" style="display:none">
-      <h2>Aperçu du bilan</h2>
-      <div id="resume" class="grid"></div>
-      <div class="table" style="margin-top:12px">
-        <table>
-          <thead id="thead"></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-      <div class="helper">Utilisez “Exporter PDF” (impression) pour générer un PDF propre.</div>
-    </section>
-  </main>
-
-  <footer class="footer"><small>Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</small></footer>
 </body>
 </html>

@@ -10,30 +10,36 @@
   <script defer src="js/saisie.js"></script>
 </head>
 <body>
-  <main class="container">
-    <section class="card">
-      <h2 id="titre">Séance — <span id="apsa_name"></span></h2>
-      <div class="helper" id="who"></div>
-      <div id="dyn_fields" class="row"></div>
-      <div class="row" style="margin-top:10px">
-        <div class="field"><button id="save" class="btn">Enregistrer + QR</button></div>
-        <div class="field"><button id="export_csv" class="btn secondary">Exporter CSV</button></div>
-        <div class="field"><label class="btn secondary" for="import_csv">Réimporter CSV</label><input id="import_csv" type="file" accept=".csv" style="display:none"></div>
-      </div>
-    </section>
+  <div class="wrap">
+    <main class="centered">
+      <div class="shell">
+        <section class="card">
+          <h2 id="titre">Séance — <span id="apsa_name"></span></h2>
+          <div class="helper" id="who"></div>
+          <div id="dyn_fields" class="row"></div>
+          <div class="actions">
+            <button id="save" class="btn ok">Enregistrer + QR</button>
+            <button id="export_csv" class="btn ghost">Exporter CSV</button>
+            <label class="btn ghost" for="import_csv">Réimporter CSV</label>
+            <input id="import_csv" type="file" accept=".csv" style="display:none">
+            <a class="btn ghost" href="rapport.html">Bilan PDF</a>
+          </div>
+        </section>
 
-    <section id="qr_card" class="card" style="display:none">
-      <h2>QR de la séance</h2>
-      <div id="qr" class="qr"></div>
-    </section>
+        <section id="qr_card" class="card" style="display:none">
+          <h2>QR de la séance</h2>
+          <div id="qr" class="qr"></div>
+        </section>
 
-    <section class="card">
-      <h2>Mes séances</h2>
-      <div class="table-wrap">
-        <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+        <section class="card">
+          <h2>Mes séances</h2>
+          <div class="table-wrap">
+            <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+          </div>
+        </section>
       </div>
-    </section>
-  </main>
-  <footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+    </main>
+    <footer class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  </div>
 </body>
 </html>

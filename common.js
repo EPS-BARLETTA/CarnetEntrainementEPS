@@ -18,22 +18,18 @@ function toCSV(rows){
   return [headers.join(","), ...rows.map(r=>headers.map(h=>`"${esc(r[h])}"`).join(","))].join("\n");
 }
 function fromCSV(text){
-  // simple CSV parser (comma, quote)
   const lines = text.split(/\r?\n/).filter(Boolean);
   if(!lines.length) return [];
-  const headers = lines[0].split(",").map(h=>h.replace(/^"|"$/g,""));
+  const headers = lines[0].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
   const rows = [];
   for (let i=1;i<lines.length;i++){
-    let row = []; let cur=""; let q=false;
-    const s = lines[i];
-    for (let j=0;j<s.length;j++){
-      const c=s[j];
-      if (c=='"'){ if (q && s[j+1]=='"'){cur+='"'; j++;} else { q=!q; } }
-      else if (c=="," && !q){ row.push(cur); cur=""; }
-      else { cur+=c; }
-    }
-    row.push(cur);
-    const obj={}; headers.forEach((h,k)=>obj[h.replace(/^"|"$/g,"")] = (row[k]||"").replace(/^"|"$/g,""));
+    const cols = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+    const obj = {};
+    headers.forEach((h,idx)=>{
+      const key = h.replace(/^"|"$/g,"");
+      const val = (cols[idx]||"").replace(/^"|"$/g,"").replace(/""/g,'"');
+      obj[key] = val;
+    });
     rows.push(obj);
   }
   return rows;
