@@ -14,3 +14,4 @@ textarea{min-height:160px;resize:none;line-height:1.5}.helper{font-size:12px;col
 .qr{display:grid;place-items:center;min-height:260px;border:2px dashed var(--border);border-radius:14px;background:var(--glass);margin-top:10px;padding:10px}
 .readonly{width:100%;min-height:100px;background:rgba(255,255,255,.04);border-radius:12px;border:1px dashed var(--border);padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#aab3c2;overflow:auto}
 .footer{padding:18px;text-align:center;color:#c9ced6}
+.build{font-size:12px;color:#9aa4b2;margin-top:8px}

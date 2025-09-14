@@ -1,8 +1,17 @@
 <!DOCTYPE html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Carnet d’entraînement EPS — QR (SVG via CDN)</title><link rel="stylesheet" href="style.css">
-<!-- Librairie fiable depuis CDNJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Carnet d’entraînement EPS — QR (SVG, CDN) — V6j2</title><link rel="stylesheet" href="style.css">
+<script>
+window.onerror = function(msg, src, line, col, err){
+  var el = document.getElementById('diag');
+  if(el) el.textContent = "JS Error: "+msg+" @"+line+":"+col;
+};
+</script>
+<!-- Librairie fiable depuis CDNJS + cache-busting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js?v=20250914221926" defer onload="window._qrReady=1" onerror="window._qrReady=0"></script>
 </head>
 <body>
 <div class="center"><div class="container"><div class="card" style="text-align:center">
@@ -14,11 +23,12 @@
     <button class="btn alt" onclick="downloadSVG()">Télécharger le QR (SVG)</button>
     <a class="btn ghost" href="saisie.html">Retour</a>
   </div>
+  <div class="build">V6j2</div>
 </div></div></div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
 <script>
 function bytes(s){ return new Blob([s]).size; }
-function diag(s){ document.getElementById('diag').textContent = s; }
+function diagSet(s){ document.getElementById('diag').textContent = s; }
 function getPayload(){
   var p = sessionStorage.getItem('ceps:qr_payload')||'';
   if(!p){
@@ -27,24 +37,33 @@ function getPayload(){
     var classe = localStorage.getItem('ceps:last_classe')||'';
     var tri = localStorage.getItem('ceps:last_tri')||'';
     var key = 'cahier_eps:'+nom+':'+prenom+':'+classe+':'+tri;
-    try{ var raw = localStorage.getItem(key); if(raw){ var obj = JSON.parse(raw); var last = (obj.seances||[])[(obj.seances||[]).length-1]; if(last) p = JSON.stringify(last); } }catch(e){ diag('JSON error: '+e.message); }
+    try{ var raw = localStorage.getItem(key); if(raw){ var obj = JSON.parse(raw); var last = (obj.seances||[])[(obj.seances||[]).length-1]; if(last) p = JSON.stringify(last); } }catch(e){ diagSet('JSON error: '+e.message); }
   }
   if(!p) p = JSON.stringify({INFO:'Test',NOTE:'Page QR ouverte sans séance.'});
   return p;
 }
-function render(){
+function render(){ 
   var payload = getPayload();
   document.getElementById('payload_preview').textContent = payload;
-  diag('Octets: '+bytes(payload));
-  var q = qrcode(0, 'M'); // version auto, ECC M
-  q.addData(payload); q.make();
-  document.getElementById('qrc').innerHTML = q.createSvgTag(6,0);
+  diagSet('Octets: '+bytes(payload)+' — Build V6j2');
+  if(!window._qrReady || typeof qrcode === 'undefined'){ diagSet('Lib QR non chargée. Vérifie la connexion/Cache.'); return; }
+  try{
+    var q = qrcode(0, 'M'); q.addData(payload); q.make();
+    document.getElementById('qrc').innerHTML = q.createSvgTag(6,0);
+  }catch(e){ diagSet('Erreur QR: '+e.message); }
 }
 function downloadSVG(){
   const svg = document.querySelector('#qrc svg'); if(!svg) return alert('Pas de SVG.');
   const blob = new Blob([svg.outerHTML], {type:'image/svg+xml'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='QR_Seance.svg'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
-window.addEventListener('load', render);
+window.addEventListener('load', function(){
+  // attendre le defer onload
+  var tries=0; (function waitLib(){
+    if(window._qrReady) return render();
+    if(tries++>40){ diagSet('Timeout chargement lib QR.'); return; }
+    setTimeout(waitLib, 100);
+  })();
+});
 </script>
 </body></html>
