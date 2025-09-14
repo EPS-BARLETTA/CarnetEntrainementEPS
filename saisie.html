@@ -7,25 +7,15 @@
   <div class="card">
     <h2>Saisie libre</h2>
     <p class="subtitle" id="who"></p>
-    <div class="field"><label>Notes / Infos de la séance</label>
-      <textarea id="notes" placeholder="Écris uniquement ce que le prof demande (performances, objectifs, ressenti...)."></textarea>
-      <div class="helper">Le contenu part dans le QR. Reste concis pour un meilleur scan.</div>
-    </div>
-    <div class="field"><label>Taille du message QR</label>
-      <div class="progress"><span id="qr_bar"></span></div>
-      <div class="note" id="qr_info">0 / 2000 octets</div>
-    </div>
-    <div class="switch">
-      <input type="checkbox" id="live_qr">
-      <label for="live_qr">QR en direct (génère pendant la saisie)</label>
+    <div class="field">
+      <label>Notes / Infos de la séance</label>
+      <textarea id="notes" placeholder="Écris exactement ce que le prof demande. Reste concis pour le QR."></textarea>
+      <div class="helper">Astuce iPad : touche prolongée pour déplacer le curseur. Le cadre s’agrandit tout seul en hauteur.</div>
     </div>
     <div class="actions">
-      <button id="save_only" class="btn cta">Enregistrer la séance</button>
-      <button id="gen_current" class="btn ghost">Générer QR (texte actuel)</button>
-      <button id="gen_last" class="btn ghost">QR (dernière séance enregistrée)</button>
-      <button id="download_qr" class="btn alt">Télécharger le QR</button>
+      <button id="save_only" class="btn cta">Enregistrer ma séance</button>
+      <button id="open_qr" class="btn alt">Générer QR code</button>
     </div>
-    <div id="qr" class="qr"></div>
   </div>
 
   <div class="card">
@@ -43,7 +33,7 @@
   </div>
 
   <div class="actions" style="justify-content:center;margin:18px 0 0 0">
-    <a class="btn alt" href="identite.html">Changer d’identité</a>
+    <a class="btn ghost" href="identite.html">Changer d’identité</a>
   </div>
 </div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
