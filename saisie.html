@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carnet d’entraînement EPS — Saisie</title><link rel="stylesheet" href="style.css">
+<script src="qrcode.min.js"></script><script src="common.js"></script><script defer src="saisie.js"></script></head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="nav">
+      <a href="index.html">Accueil</a>
+      <a href="identite.html">Identité</a>
+      <a href="saisie.html">Saisie</a>
+      <a href="aide.html">Aide</a>
+      <a href="securite.html">Fiches sécurité</a>
+    </div>
+    <h2>Saisie libre</h2>
+    <p class="subtitle" id="who"></p>
+    <div class="field">
+      <label>Notes / Infos de la séance</label>
+      <textarea id="notes" placeholder="Écris exactement ce que le prof demande. Reste concis pour le QR."></textarea>
+      <div class="counts">
+        <span id="chars">0 caractères</span>
+        <span id="words">0 mots</span>
+        <span id="qr_bytes"><span class="badge green" id="qr_badge">0 / 2000 octets</span> (≈ <span id='words_left'>0</span> mots restants)</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="save_only" class="btn cta">Enregistrer ma séance</button>
+      <button id="open_qr" class="btn alt">Générer QR code</button>
+      <button id="toggle_week" class="btn ghost">Vue par semaine</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Mes séances</h2>
+    <div id="list_flat" class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Date</th><th>Semaine</th><th>Activité</th><th>Résumé</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div id="list_group" class="kards" style="display:none"></div>
+    <div class="actions">
+      <button id="export_csv" class="btn ghost">Exporter CSV</button>
+      <label class="btn ghost" for="import_csv">Réimporter CSV</label><input id="import_csv" type="file" accept=".csv" style="display:none">
+    </div>
+  </div>
+</div>
+<div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
+</body></html>
