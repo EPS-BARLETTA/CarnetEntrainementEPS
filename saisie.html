@@ -4,7 +4,7 @@
 <body>
 <div class="container">
   <div class="card">
-    <div class="nav"><a href="index.html">Accueil</a><a href="identite.html">Identité</a><a href="saisie.html">Séance</a><a href="qr.html">QR</a><a href="qr_test.html">QR test</a></div>
+    <div class="nav"><a href="index.html">Accueil</a><a href="identite.html">Identité</a><a href="saisie.html">Séance</a><a href="qr_test.html">QR test</a></div>
     <h2>Saisie libre</h2>
     <p class="subtitle" id="who"></p>
     <div class="field"><label>Notes</label><textarea id="notes" placeholder="Écris qqchose"></textarea></div>
@@ -57,7 +57,6 @@ function goQR(){
   const prenom = localStorage.getItem("ceps:last_prenom")||"";
   const classe = localStorage.getItem("ceps:last_classe")||"";
   const tri = localStorage.getItem("ceps:last_tri")||"";
-  const key = keyBy(nom, prenom, classe, tri);
   const d = loadCahier(nom, prenom, classe, tri);
   const last = (d.seances||[])[(d.seances||[]).length-1];
   const payload = last ? JSON.stringify(last) : JSON.stringify({INFO:"No session"});
