@@ -3,19 +3,36 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Identité — V6j2</title><link rel="stylesheet" href="style.css"></head>
+<title>Identité — V7.1</title><link rel="stylesheet" href="style.css"></head>
 <body>
-<div class="center"><div class="container"><div class="card">
-  <div class="nav"><a href="index.html">Accueil</a><a href="identite.html">Identité</a><a href="saisie.html">Séance</a><a href="qr_test.html">QR test</a></div>
-  <h2>Identité</h2>
-  <div class="field"><label>Nom</label><input id="nom" placeholder="DURAND"></div>
-  <div class="field"><label>Prénom</label><input id="prenom" placeholder="Emma"></div>
-  <div class="field"><label>Classe</label><input id="classe" placeholder="Tle1"></div>
-  <div class="field"><label>Trimestre</label><input id="tri" value="T1-2025"></div>
-  <div class="field"><label>APSA</label><input id="apsa" value="Demi-fond"></div>
-  <div class="actions"><button class="btn alt" onclick="save()">Aller à la séance</button></div>
-  <div class="build">V6j2</div>
-</div></div></div>
+<div class="center">
+  <div class="container"><div class="card">
+    <div class="nav">
+      <a href="index.html">Accueil</a>
+      <a href="identite.html">Identité</a>
+      <a href="saisie.html">Séances</a>
+      <a href="qr_test.html">QR test</a>
+    </div>
+    <h2>Identité</h2>
+    <p class="helper">Renseigne tes infos, puis va aux séances.</p>
+    <div class="field"><label>Nom</label><input id="nom" placeholder="DURAND"></div>
+    <div class="field"><label>Prénom</label><input id="prenom" placeholder="Emma"></div>
+    <div class="field"><label>Classe</label><input id="classe" placeholder="Tle1"></div>
+    <div class="field"><label>Trimestre</label><input id="tri" value="T1-2025"></div>
+    <div class="field"><label>APSA</label>
+      <select id="apsa">
+        <option>Demi-fond</option><option>Natation</option><option>Escalade</option>
+        <option>Danse</option><option>Badminton</option><option>Football</option>
+        <option>Volley</option><option>Musculation</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button class="btn alt" onclick="save()">Aller aux séances</button>
+      <a class="btn ghost" href="index.html">Retour</a>
+    </div>
+    <div class="build">V7.1</div>
+  </div></div>
+</div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
 <script>
 function save(){

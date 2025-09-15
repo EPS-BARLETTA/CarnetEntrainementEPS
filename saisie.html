@@ -3,69 +3,204 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Séance — V6j2</title><link rel="stylesheet" href="style.css"></head>
-<body>
-<div class="container">
-  <div class="card">
-    <div class="nav"><a href="index.html">Accueil</a><a href="identite.html">Identité</a><a href="saisie.html">Séance</a><a href="qr_test.html">QR test</a></div>
-    <h2>Saisie libre</h2>
-    <p class="subtitle" id="who"></p>
-    <div class="field"><label>Notes</label><textarea id="notes" placeholder="Écris qqchose"></textarea></div>
-    <div class="actions">
-      <button class="btn cta" onclick="save()">Enregistrer ma séance</button>
-      <button class="btn alt" onclick="goQR()">Générer QR code</button>
-    </div>
-    <div class="build">V6j2</div>
-  </div>
-</div>
-<div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
+<title>Séances — V7.1</title><link rel="stylesheet" href="style.css">
 <script>
-(function(){
-  const nom = localStorage.getItem("ceps:last_nom")||"";
-  const prenom = localStorage.getItem("ceps:last_prenom")||"";
-  const classe = localStorage.getItem("ceps:last_classe")||"";
-  const tri = localStorage.getItem("ceps:last_tri")||"";
-  const apsa = localStorage.getItem("ceps:last_apsa")||"";
-  document.getElementById("who").textContent = nom+" "+prenom+" — "+classe+" — "+tri+" — "+apsa;
-})();
 function keyBy(nom, prenom, classe, tri){ return "cahier_eps:"+nom+":"+prenom+":"+classe+":"+tri; }
 function loadCahier(nom, prenom, classe, tri){
   const raw = localStorage.getItem(keyBy(nom, prenom, classe, tri));
   if(!raw) return { meta:{}, seances:[] };
-  try { return JSON.parse(raw); } catch(e){ return {meta:{}, seances:[]}; }
+  try { return JSON.parse(raw); } catch(e) { return { meta:{}, seances:[] }; }
 }
 function saveCahier(nom, prenom, classe, tri, data){
   data.meta = Object.assign({}, data.meta||{}, {updated_at:new Date().toISOString()});
   localStorage.setItem(keyBy(nom, prenom, classe, tri), JSON.stringify(data));
 }
-function save(){
-  const nom = localStorage.getItem("ceps:last_nom")||"";
-  const prenom = localStorage.getItem("ceps:last_prenom")||"";
-  const classe = localStorage.getItem("ceps:last_classe")||"";
-  const tri = localStorage.getItem("ceps:last_tri")||"";
-  const apsa = localStorage.getItem("ceps:last_apsa")||"";
+function countWords(s){ return (String(s).trim().match(/\S+/g)||[]).length; }
+function isoWeek(d){
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1)/7);
+  return date.getUTCFullYear() + "-W" + String(weekNo).padStart(2,'0');
+}
+let EDIT_INDEX = null;
+</script>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="nav">
+      <a href="index.html">Accueil</a>
+      <a href="identite.html">Identité</a>
+      <a href="saisie.html">Séances</a>
+      <a href="qr_test.html">QR test</a>
+    </div>
+    <h2>Nouvelle séance</h2>
+    <p class="subtitle" id="who"></p>
+    <div class="field"><label>Notes / Infos</label>
+      <textarea id="notes" placeholder="Court et clair."></textarea>
+      <div class="counts"><span id="chars">0 caractères</span><span id="words">0 mots</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn cta" id="saveBtn">Enregistrer ma séance</button>
+      <button class="btn ghost" id="clearBtn">Vider</button>
+    </div>
+    <div class="build">V7.1</div>
+  </div>
+
+  <div class="card">
+    <h2>Mes séances</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Date</th><th>Semaine</th><th>Activité</th><th>Résumé</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="exportCSV">Exporter CSV</button>
+      <label class="btn ghost" for="importCSV">Réimporter CSV</label>
+      <input id="importCSV" type="file" accept=".csv" style="display:none">
+    </div>
+  </div>
+</div>
+<div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
+
+<script>
+const nom = localStorage.getItem("ceps:last_nom")||"";
+const prenom = localStorage.getItem("ceps:last_prenom")||"";
+const classe = localStorage.getItem("ceps:last_classe")||"";
+const tri = localStorage.getItem("ceps:last_tri")||"";
+const apsa = localStorage.getItem("ceps:last_apsa")||"";
+document.getElementById("who").textContent = nom+" "+prenom+" — "+classe+" — "+tri+" — "+apsa;
+
+const ta = document.getElementById("notes");
+function refreshCounts(){
+  const t = ta.value||"";
+  document.getElementById("chars").textContent = t.length + " caractères";
+  document.getElementById("words").textContent = countWords(t) + " mots";
+}
+ta.addEventListener("input",()=>{ ta.style.height="auto"; ta.style.height=(ta.scrollHeight+6)+"px"; refreshCounts(); });
+refreshCounts();
+
+function renderTable(){
+  const tb = document.getElementById("tbody"); tb.innerHTML="";
   const d = loadCahier(nom, prenom, classe, tri);
-  const row = {
-    "Séance": (d.seances?.length||0)+1,
-    "Nom": nom, "Prénom": prenom, "Classe": classe, "Trimestre": tri,
-    "Date": new Date().toISOString().slice(0,10),
-    "Semaine": "W00",
-    "Activité": apsa,
-    "Texte": (document.getElementById("notes").value||"")
-  };
-  d.seances = d.seances||[]; d.seances.push(row); saveCahier(nom, prenom, classe, tri, d);
+  (d.seances||[]).forEach((r,i)=>{
+    const tr = document.createElement("tr");
+    const short = (r.Texte||"").slice(0,60) + ((r.Texte||"").length>60 ? "…" : "");
+    tr.innerHTML = `<td>${r["Séance"]||i+1}</td>
+                    <td>${r.Date||""}</td>
+                    <td>${r.Semaine||""}</td>
+                    <td>${r.Activité||""}</td>
+                    <td>${short}</td>
+                    <td style="white-space:nowrap">
+                      <button class="btn ghost" data-i="${i}" data-act="qr">QR</button>
+                      <button class="btn ghost" data-i="${i}" data-act="edit">✏️</button>
+                      <button class="btn warn" data-i="${i}" data-act="del">🗑</button>
+                    </td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",(ev)=>{
+    const i = +ev.currentTarget.dataset.i;
+    const act = ev.currentTarget.dataset.act;
+    const d = loadCahier(nom, prenom, classe, tri);
+    if(act==="del"){
+      if(!confirm("Supprimer cette séance ?")) return;
+      d.seances.splice(i,1);
+      d.seances = d.seances.map((s,idx)=>Object.assign({},s,{"Séance": idx+1}));
+      saveCahier(nom, prenom, classe, tri, d);
+      renderTable();
+    } else if(act==="edit"){
+      const row = d.seances[i];
+      ta.value = row.Texte||"";
+      ta.style.height="auto"; ta.style.height=(ta.scrollHeight+6)+"px";
+      refreshCounts();
+      EDIT_INDEX = i;
+      document.getElementById("saveBtn").textContent = "Mettre à jour la séance #"+(i+1);
+      window.scrollTo({top:0,behavior:"smooth"});
+    } else if(act==="qr"){
+      const row = d.seances[i];
+      try{ sessionStorage.setItem("ceps:qr_payload", JSON.stringify(row)); }catch(e){}
+      location.href = "qr.html?sid="+i+"&ts="+Date.now();
+    }
+  }));
+}
+renderTable();
+
+document.getElementById("saveBtn").addEventListener("click",()=>{
+  const d = loadCahier(nom, prenom, classe, tri);
+  const now = new Date();
+  if(EDIT_INDEX==null){
+    const row = {
+      "Séance": (d.seances?.length||0)+1,
+      "Nom": nom, "Prénom": prenom, "Classe": classe, "Trimestre": tri,
+      "Date": now.toISOString().slice(0,10),
+      "Semaine": isoWeek(now),
+      "Activité": apsa,
+      "Texte": ta.value||""
+    };
+    d.seances = d.seances||[]; d.seances.push(row);
+  } else {
+    d.seances[EDIT_INDEX].Texte = ta.value||"";
+    EDIT_INDEX = null;
+    document.getElementById("saveBtn").textContent = "Enregistrer ma séance";
+  }
+  saveCahier(nom, prenom, classe, tri, d);
+  renderTable();
   alert("Séance enregistrée.");
+});
+
+document.getElementById("clearBtn").addEventListener("click",()=>{ ta.value=""; refreshCounts(); ta.style.height="auto"; });
+
+// === CSV export/import ===
+function toCSV(rows){
+  if(!rows.length) return "";
+  const headers = Array.from(new Set(rows.flatMap(r=>Object.keys(r))));
+  const esc=v=>(v==null?"":String(v).replace(/"/g,'""'));
+  return [headers.join(","), ...rows.map(r=>headers.map(h=>`"${esc(r[h])}"`).join(","))].join("\n");
 }
-function goQR(){
-  const nom = localStorage.getItem("ceps:last_nom")||"";
-  const prenom = localStorage.getItem("ceps:last_prenom")||"";
-  const classe = localStorage.getItem("ceps:last_classe")||"";
-  const tri = localStorage.getItem("ceps:last_tri")||"";
-  const d = loadCahier(nom, prenom, classe, tri);
-  const last = (d.seances||[])[(d.seances||[]).length-1];
-  const payload = last ? JSON.stringify(last) : JSON.stringify({INFO:"No session"});
-  try{ sessionStorage.setItem("ceps:qr_payload", payload); }catch(e){}
-  location.href = "qr.html";
+function fromCSV(text){
+  const lines = text.split(/\r?\n/).filter(Boolean);
+  if(!lines.length) return [];
+  const headers = lines[0].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+  const rows = [];
+  for (let i=1;i<lines.length;i++){
+    const cols = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+    const obj = {};
+    headers.forEach((h,idx)=>{
+      const key = h.replace(/^"|"$/g,"");
+      const val = (cols[idx]||"").replace(/^"|"$/g,"").replace(/""/g,'"');
+      obj[key] = val;
+    });
+    rows.push(obj);
+  }
+  return rows;
 }
+
+document.getElementById("exportCSV").addEventListener("click",()=>{
+  const rows = (loadCahier(nom, prenom, classe, tri).seances)||[];
+  if(!rows.length) return alert("Aucune séance à exporter.");
+  const csv = toCSV(rows);
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`CarnetEPS_${nom}_${prenom}_${classe}_${tri}.csv`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  alert("CSV exporté. Astuce: enregistre « Sur mon iPad » (local).");
+});
+
+document.getElementById("importCSV").addEventListener("change",(ev)=>{
+  const f = ev.target.files?.[0]; if(!f) return;
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    try{
+      const rows = fromCSV(fr.result);
+      const renum = rows.map((s,idx)=>Object.assign({}, s, {"Séance": idx+1}));
+      const d = loadCahier(nom, prenom, classe, tri); d.seances = renum; saveCahier(nom, prenom, classe, tri, d);
+      renderTable();
+      alert("CSV importé.");
+    }catch(e){ alert("Erreur CSV."); }
+  };
+  fr.readAsText(f);
+});
 </script>
 </body></html>
