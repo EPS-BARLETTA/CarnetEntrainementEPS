@@ -3,20 +3,17 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>QR plein écran — V7.1</title><link rel="stylesheet" href="style.css">
+<title>QR plein écran — V7.1.1</title><link rel="stylesheet" href="style.css">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js?v=20250915065216" defer onload="window._qrReady=1"></script>
-<style>body{{background:#fff;color:#000}}</style>
-<style>.fullqr{width:94vmin;height:94vmin}</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js?v=20250915070536" defer onload="window._qrReady=1"></script>
+<style>body{background:#fff;color:#000}</style>
 </head>
 <body>
 <div class="fullwrap">
-  <div>
-    <div class="fullqr" id="qrc"></div>
-    <div style="text-align:center;margin-top:10px">
-      <a class="btn" href="saisie.html">Retour</a>
-    </div>
+  <div class="fullqr"><div id="qrc" class="qrframe"></div></div>
+  <div style="text-align:center;margin-top:10px">
+    <a class="btn" href="saisie.html">Retour</a>
   </div>
 </div>
 <script>
@@ -28,8 +25,11 @@ function getPayload(){
 function render(){
   if(!window._qrReady || typeof qrcode==='undefined') return;
   var payload = getPayload();
-  try{ var q=qrcode(0,'M'); q.addData(payload); q.make(); document.getElementById('qrc').innerHTML = q.createSvgTag(16,0); }
-  catch(e){ document.getElementById('qrc').textContent='Erreur QR'; }
+  try{ 
+    var q=qrcode(0,'M'); q.addData(payload); q.make();
+    // Plein écran : scale plus fort + marge large
+    document.getElementById('qrc').innerHTML = q.createSvgTag(18, 10);
+  }catch(e){ document.getElementById('qrc').textContent='Erreur QR'; }
 }
 window.addEventListener('load', ()=>{ let tries=0;(function w(){ if(window._qrReady) return render(); if(tries++>40) return; setTimeout(w,100); })() });
 </script>

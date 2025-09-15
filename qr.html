@@ -3,8 +3,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>QR — V7.1</title><link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js?v=20250915065216" defer onload="window._qrReady=1"></script>
+<title>QR — V7.1.1</title><link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js?v=20250915070536" defer onload="window._qrReady=1"></script>
 </head>
 <body>
 <div class="center">
@@ -16,7 +16,7 @@
       <a href="qr_test.html">QR test</a>
     </div>
     <h2>QR de la séance (SVG)</h2>
-    <div id="qrc" class="qr"></div>
+    <div class="qr"><div id="qrc" class="qrframe"></div></div>
     <div class="field"><label>Aperçu du JSON</label><div id="payload_preview" class="readonly"></div><p class="helper"><span id="diag"></span></p></div>
     <div class="actions">
       <a class="btn alt" id="fullBtn">Plein écran</a>
@@ -24,7 +24,7 @@
       <button class="btn ghost" onclick="downloadSVG()">Télécharger (SVG)</button>
       <a class="btn ghost" href="saisie.html">Retour</a>
     </div>
-    <div class="build">V7.1</div>
+    <div class="build">V7.1.1</div>
   </div></div>
 </div>
 <div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
@@ -40,9 +40,12 @@ function render(){
   if(!window._qrReady || typeof qrcode==='undefined'){ diag('Lib QR non chargée.'); return; }
   var payload = getPayload();
   document.getElementById('payload_preview').textContent = payload;
-  diag('Octets: '+bytes(payload)+' — V7.1');
-  try{ var q=qrcode(0,'M'); q.addData(payload); q.make(); document.getElementById('qrc').innerHTML = q.createSvgTag(8,0); }
-  catch(e){ diag('Erreur QR: '+e.message); }
+  diag('Octets: '+bytes(payload)+' — V7.1.1');
+  try{ 
+    var q=qrcode(0,'M'); q.addData(payload); q.make();
+    // Margin généreux (quiet zone) + scale confortable
+    document.getElementById('qrc').innerHTML = q.createSvgTag(10, 8);
+  }catch(e){ diag('Erreur QR: '+e.message); }
 }
 function downloadSVG(){
   const svg = document.querySelector('#qrc svg'); if(!svg) return alert('Pas de SVG.');
