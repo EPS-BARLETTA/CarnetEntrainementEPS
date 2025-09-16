@@ -1,0 +1,64 @@
+[
+  {
+    "id": "run-basic",
+    "titre": "Course — général",
+    "bl1": [
+      {
+        "txt": "Footing léger + mobilisation articulations",
+        "part": 2
+      },
+      {
+        "txt": "Montées de genoux + talons-fesses",
+        "part": 1
+      },
+      {
+        "txt": "Accélérations progressives (3×60m)",
+        "part": 2
+      }
+    ],
+    "bl2": [
+      {
+        "txt": "Éducatifs techniques (pose de pied, bras)",
+        "part": 1
+      }
+    ]
+  },
+  {
+    "id": "lucleger-eval",
+    "titre": "Luc Léger — échauffement",
+    "bl1": [
+      {
+        "txt": "Footing 6–8 min",
+        "part": 2
+      },
+      {
+        "txt": "Mobilité hanches/chevilles",
+        "part": 1
+      },
+      {
+        "txt": "Lignes droites progressives (4×50m)",
+        "part": 2
+      }
+    ]
+  },
+  {
+    "id": "sprint30-basic",
+    "titre": "Sprint 30m — échauffement",
+    "bl1": [
+      {
+        "txt": "Footing + éducatifs (AMHA, talons-fesses)",
+        "part": 2
+      },
+      {
+        "txt": "Montées progressives (4×30m)",
+        "part": 2
+      }
+    ],
+    "bl2": [
+      {
+        "txt": "Départs variés (3–4)",
+        "part": 1
+      }
+    ]
+  }
+]
