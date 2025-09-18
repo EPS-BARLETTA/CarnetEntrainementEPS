@@ -1,61 +1,27 @@
 <!DOCTYPE html><html lang="fr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>QR — V7.1.1</title><link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js?v=20250915070536" defer onload="window._qrReady=1"></script>
-</head>
-<body>
-<div class="center">
-  <div class="container"><div class="card" style="text-align:center">
-    <div class="nav">
-      <a href="index.html">Accueil</a>
-      <a href="identite.html">Identité</a>
-      <a href="saisie.html">Séances</a>
-      <a href="qr_test.html">QR test</a>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Carnet EPS – QR</title>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<div class="container">
+  <div class="header">
+    <div>
+      <div class="h1">Partager au prof</div>
+      <div class="sub">QR de la dernière séance (scan via ScanProf)</div>
     </div>
-    <h2>QR de la séance (SVG)</h2>
-    <div class="qr"><div id="qrc" class="qrframe"></div></div>
-    <div class="field"><label>Aperçu du JSON</label><div id="payload_preview" class="readonly"></div><p class="helper"><span id="diag"></span></p></div>
-    <div class="actions">
-      <a class="btn alt" id="fullBtn">Plein écran</a>
-      <button class="btn ghost" id="refreshBtn">Rafraîchir</button>
-      <button class="btn ghost" onclick="downloadSVG()">Télécharger (SVG)</button>
-      <a class="btn ghost" href="saisie.html">Retour</a>
+  </div>
+  <div class="card qr-wrap" id="qrWrap">
+    <div id="qrBox" class="qr-box"><div id="qrcode"></div></div>
+    <div class="row">
+      <button id="btn-contrast" class="button">Contraste 🌙/☀️</button>
+      <button id="btn-full" class="button">Plein écran</button>
+      <button id="btn-download" class="button">Télécharger PNG</button>
+      <a href="index.html" class="button">Accueil</a>
     </div>
-    <div class="build">V7.1.1</div>
-  </div></div>
+    <div class="sub">Si le QR ne s'affiche pas, utilise l'export CSV depuis la page Saisie.</div>
+  </div>
+  <div class="footer">CarnetEntrainementEPS — Équipe EPS Lycée Vauban – LUXEMBOURG – JB</div>
 </div>
-<div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
-<script>
-function diag(s){ document.getElementById('diag').textContent = s; }
-function bytes(s){ return new Blob([s]).size; }
-function getPayload(){
-  var p = sessionStorage.getItem('ceps:qr_payload')||'';
-  if(!p) p = JSON.stringify({INFO:'Test',NOTE:'Page QR ouverte sans séance.'});
-  return p;
-}
-function render(){
-  if(!window._qrReady || typeof qrcode==='undefined'){ diag('Lib QR non chargée.'); return; }
-  var payload = getPayload();
-  document.getElementById('payload_preview').textContent = payload;
-  diag('Octets: '+bytes(payload)+' — V7.1.1');
-  try{ 
-    var q=qrcode(0,'M'); q.addData(payload); q.make();
-    // Margin généreux (quiet zone) + scale confortable
-    document.getElementById('qrc').innerHTML = q.createSvgTag(10, 8);
-  }catch(e){ diag('Erreur QR: '+e.message); }
-}
-function downloadSVG(){
-  const svg = document.querySelector('#qrc svg'); if(!svg) return alert('Pas de SVG.');
-  const blob = new Blob([svg.outerHTML], {type:'image/svg+xml'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='QR_Seance.svg'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-document.getElementById('refreshBtn').addEventListener('click', render);
-document.getElementById('fullBtn').addEventListener('click', ()=>{ location.href = 'qr_full.html?ts='+Date.now(); });
-window.addEventListener('load', ()=>{ let tries=0;(function w(){ if(window._qrReady) return render(); if(tries++>40) return diag('Timeout lib QR'); setTimeout(w,100); })() });
-window.addEventListener('pageshow', render);
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) render(); });
-</script>
+<script src="qrcode.min.js"></script>
+<script type="module" src="qr.js"></script>
 </body></html>

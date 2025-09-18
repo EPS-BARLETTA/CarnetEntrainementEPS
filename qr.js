@@ -1,50 +1,33 @@
-
-document.addEventListener("DOMContentLoaded", ()=>{
-  function getPayload(){
-    let payload = sessionStorage.getItem("ceps:qr_payload") || "";
-    if(!payload){
-      const nom = localStorage.getItem("ceps:last_nom")||"";
-      const prenom = localStorage.getItem("ceps:last_prenom")||"";
-      const classe = localStorage.getItem("ceps:last_classe")||"";
-      const tri = localStorage.getItem("ceps:last_tri")||"";
-      const key = `cahier_eps:${nom}:${prenom}:${classe}:${tri}`;
-      try{
-        const raw = localStorage.getItem(key);
-        if(raw){
-          const obj = JSON.parse(raw);
-          const last = (obj.seances||[])[(obj.seances||[]).length-1];
-          if(last){ payload = JSON.stringify(last); }
-        }
-      }catch(e){}
-    }
-    return payload || "{}";
+import {store, keys} from './assets/js/storage.js';
+const wrap = document.getElementById('qrWrap');
+const qrBox = document.getElementById('qrBox');
+const btnContrast = document.getElementById('btn-contrast');
+const btnFull = document.getElementById('btn-full');
+const btnDownload = document.getElementById('btn-download');
+const last = store.get(keys.derniereSeance, null);
+if(!last){
+  qrBox.innerHTML = '<div class="sub">Aucune séance enregistrée.</div>';
+} else {
+  const data = JSON.stringify(last);
+  // QRCode library expected at window.QRCode
+  try{
+    const el = document.getElementById('qrcode');
+    el.innerHTML='';
+    const qr = new window.QRCode(el, {text:data, width:256, height:256, correctLevel: window.QRCode.CorrectLevel.M});
+    // store reference for download
+    window.__qrCanvas = el.querySelector('canvas');
+  }catch(e){
+    qrBox.innerHTML = '<div class="sub">QR indisponible (lib manquante). Utilise l\'export CSV.</div>';
   }
-  const payload = getPayload();
-  const utf8 = toUTF8(payload);
-  const container = document.getElementById("qrc");
-  const preview = document.getElementById("payload_preview");
-  const diag = document.getElementById("diag_bytes");
-  preview.textContent = payload;
-  diag.textContent = `Taille JSON: ${new Blob([payload]).size} octets (UTF‑8)`;
-  container.innerHTML = "";
-  function ensureQRCode(){
-    if(typeof QRCode === "undefined"){
-      setTimeout(ensureQRCode, 150);
-      return;
-    }
-    try{
-      new QRCode(container, { text: utf8, width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M });
-    }catch(e){
-      container.textContent = "Erreur de génération du QR.";
-    }
-  }
-  ensureQRCode();
-
-  document.getElementById("download_qr").addEventListener("click", ()=>{
-    const img = container.querySelector("img");
-    const canvas = container.querySelector("canvas");
-    const src = img ? img.src : (canvas ? canvas.toDataURL("image/png") : null);
-    if(!src){ alert("QR non disponible."); return; }
-    const a = document.createElement("a"); a.href = src; a.download = "QR_Seance.png"; a.click();
-  });
+}
+btnContrast.addEventListener('click', ()=>{
+  document.body.classList.toggle('contrast-dark');
+});
+btnFull.addEventListener('click', ()=>{
+  if(qrBox.requestFullscreen) qrBox.requestFullscreen();
+});
+btnDownload.addEventListener('click', ()=>{
+  const c = window.__qrCanvas;
+  if(!c){ alert('QR non disponible.'); return; }
+  const a = document.createElement('a'); a.download = 'qr.png'; a.href = c.toDataURL('image/png'); a.click();
 });

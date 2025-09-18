@@ -1,36 +1,19 @@
 <!DOCTYPE html><html lang="fr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Carnet d’entraînement EPS — Aide</title><link rel="stylesheet" href="style.css"></head>
-<body>
-<div class="center">
-  <div class="container">
-    <div class="card">
-      <div class="nav">
-        <a href="index.html">Accueil</a>
-        <a href="identite.html">Identité</a>
-        <a href="saisie.html">Séance</a>
-        <a href="aide.html">Aide</a>
-        <a href="securite.html">Fiches sécurité</a>
-      </div>
-      <h2 class="title-gradient">Aide — 3 étapes</h2>
-      <p class="subtitle">Lis juste ça et tu sais tout.</p>
-      <div class="kards">
-        <div class="kard colored"><h3>1) Démarrer</h3><p>Va dans <strong>Identité</strong>, complète <em>Nom</em>, <em>Prénom</em>, <em>Classe</em>, <em>Trimestre</em>, puis choisis ton <em>APSA</em>.</p></div>
-        <div class="kard colored"><h3>2) Écrire ta séance</h3><p>Dans <strong>Séance</strong>, écris <em>exactement</em> ce que le prof demande. Le compteur t’indique <em>caractères</em>, <em>mots</em> et la <em>taille du QR</em>.</p></div>
-        <div class="kard colored"><h3>3) QR & rendu</h3><p>Appuie sur <strong>Enregistrer ma séance</strong> pour archiver. Appuie sur <strong>Générer QR code</strong> pour afficher le QR : le prof scanne avec <em>ScanProf</em>, et tu peux le <em>télécharger</em> ou l’<em>ajouter aux Photos</em>.</p></div>
-      </div>
-      <div class="kard"><h3>Astuce</h3>
-        <ul>
-          <li>Le badge passe <span class="badge green">vert</span>, <span class="badge orange">orange</span>, <span class="badge red">rouge</span> selon la taille du message QR.</li>
-          <li>Tableau : ✏️ <em>modifier</em>, 🗑 <em>supprimer</em> une séance. Boutons <em>Exporter/Réimporter CSV</em> en bas.</li>
-          <li>Bouton <strong>Vue par semaine</strong> pour regrouper W41, W42, etc.</li>
-        </ul>
-      </div>
-      <div class="actions">
-        <a class="btn ghost" href="index.html">Retour</a>
-      </div>
-    </div>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Aide — Carnet EPS</title>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<div class="container">
+  <div class="header"><div class="h1">Aide rapide</div><a class="button" href="index.html">Accueil</a></div>
+  <div class="card">
+    <ol>
+      <li><strong>Identité :</strong> saisis Nom, Prénom, Classe, Sexe. Conservé automatiquement.</li>
+      <li><strong>Saisie :</strong> choisis l'activité → remplis les champs → <em>Enregistrer</em>.</li>
+      <li><strong>Partager :</strong> ouvre <em>QR</em> pour afficher le code à scanner dans <em>ScanProf</em>. En cas de souci, utilise <em>Exporter CSV</em>.</li>
+      <li><strong>Calendrier :</strong> visualise tes séances par date.</li>
+    </ol>
+    <p class="sub">Astuce : le QR encode un objet JSON compatible ScanProf (schéma <code>scanprof.v1</code>).</p>
   </div>
+  <div class="footer">CarnetEntrainementEPS — Équipe EPS Lycée Vauban — LUXEMBOURG — JB</div>
 </div>
-<div class="footer">Carnet d’entraînement EPS - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</div>
 </body></html>

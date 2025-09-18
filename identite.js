@@ -1,17 +1,38 @@
-
-document.addEventListener("DOMContentLoaded", ()=>{
-  document.getElementById("go").addEventListener("click", ()=>{
-    const nom = (document.getElementById("nom").value||"").trim().toUpperCase();
-    const prenom = (document.getElementById("prenom").value||"").trim();
-    const classe = (document.getElementById("classe").value||"").trim();
-    const tri = (document.getElementById("trimestre").value||"").trim();
-    const apsa = (document.getElementById("apsa").value||"").trim();
-    if(!nom || !prenom || !classe || !tri || !apsa){ alert("Complète tous les champs."); return; }
-    localStorage.setItem("ceps:last_nom", nom);
-    localStorage.setItem("ceps:last_prenom", prenom);
-    localStorage.setItem("ceps:last_classe", classe);
-    localStorage.setItem("ceps:last_tri", tri);
-    localStorage.setItem("ceps:last_apsa", apsa);
-    location.href = "saisie.html";
-  });
+import {store, keys} from './assets/js/storage.js';
+const $ = sel => document.querySelector(sel);
+const inputs = ['nom','prenom','classe','sexe'].map(id=>$('#'+id));
+const status = $('#status');
+const btnNext = $('#btn-next');
+const btnReset = $('#btn-reset');
+// hydrate
+const saved = store.get(keys.eleve, {});
+inputs.forEach(i=>{ if(saved[i.id]!==undefined) i.value = saved[i.id]; });
+renderStatus();
+// autosave
+inputs.forEach(i=> i.addEventListener('input', ()=>{
+  const eleve = Object.fromEntries(inputs.map(x=>[x.id, x.value.trim()]));
+  store.set(keys.eleve, eleve);
+  renderStatus();
+}));
+btnNext.addEventListener('click', ()=>{
+  if(!isComplete()){
+    alert('Merci de compléter toutes les informations.');
+    return;
+  }
+  location.href = 'saisie.html';
 });
+btnReset.addEventListener('click', ()=>{
+  store.remove(keys.eleve); store.remove(keys.derniereSeance);
+  inputs.forEach(i=> i.value=''); renderStatus();
+});
+function isComplete(){
+  const e = store.get(keys.eleve, {});
+  return e.nom && e.prenom && e.classe && e.sexe;
+}
+function renderStatus(){
+  if(isComplete()){
+    status.textContent = '✅ Enregistré';
+  } else {
+    status.textContent = '⏳ En attente';
+  }
+}

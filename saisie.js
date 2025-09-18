@@ -1,173 +1,149 @@
+import {store, keys} from './assets/js/storage.js';
+const $ = s => document.querySelector(s);
+const tiles = $('#tiles');
+const formCard = $('#formCard');
+const formGrid = $('#formGrid');
+const actTitle = $('#actTitle');
+const notesEl = $('#notes');
+const btnSave = $('#btn-save');
+const btnCSV = $('#btn-csv');
 
-document.addEventListener("DOMContentLoaded", ()=>{
-  const nom = localStorage.getItem("ceps:last_nom")||"";
-  const prenom = localStorage.getItem("ceps:last_prenom")||"";
-  const classe = localStorage.getItem("ceps:last_classe")||"";
-  const tri = localStorage.getItem("ceps:last_tri")||"";
-  const apsa = localStorage.getItem("ceps:last_apsa")||"";
-  document.getElementById("who").textContent = `${nom} ${prenom} — ${classe} — ${tri} — ${apsa}`;
+// Ensure identity exists
+const eleve = store.get(keys.eleve, null);
+if(!eleve || !eleve.nom || !eleve.prenom || !eleve.classe || !eleve.sexe){
+  alert('Renseigne ton identité d'abord.');
+  location.href = 'identite.html';
+}
 
-  const ta = document.getElementById("notes");
-  const chars = document.getElementById("chars");
-  const words = document.getElementById("words");
-  const qrBytesWrap = document.getElementById("qr_bytes");
-  const qrBadge = document.getElementById("qr_badge");
-  const words_left = document.getElementById("words_left");
-  const avgWordBytes = 6;
-  function countWords(s){ return (s.trim().match(/\\S+/g)||[]).length; }
+const ACTIVITES = [
+  {id:'Course', fields:[
+    {k:'date', label:'Date', type:'date'},
+    {k:'duree_min', label:'Durée (min)', type:'number', step:'1'},
+    {k:'distance_km', label:'Distance (km)', type:'number', step:'0.01'},
+    {k:'allure_sec_km', label:'Allure (sec/km)', type:'number', step:'1'},
+    {k:'rpe', label:'RPE (1-10)', type:'number', min:'1', max:'10', step:'1'}
+  ]},
+  {id:'Musculation', fields:[
+    {k:'date', label:'Date', type:'date'},
+    {k:'exercice', label:'Exercice', type:'text'},
+    {k:'series', label:'Séries', type:'number', step:'1'},
+    {k:'reps', label:'Répétitions', type:'number', step:'1'},
+    {k:'charge_kg', label:'Charge (kg)', type:'number', step:'0.5'},
+    {k:'rpe', label:'RPE (1-10)', type:'number', min:'1', max:'10', step:'1'}
+  ]},
+  {id:'Natation', fields:[
+    {k:'date', label:'Date', type:'date'},
+    {k:'nage', label:'Nage', type:'text'},
+    {k:'distance_m', label:'Distance (m)', type:'number', step:'1'},
+    {k:'temps_sec', label:'Temps (sec)', type:'number', step:'1'},
+    {k:'rpe', label:'RPE (1-10)', type:'number', min:'1', max:'10', step:'1'}
+  ]},
+  {id:'Sports collectifs', fields:[
+    {k:'date', label:'Date', type:'date'},
+    {k:'sport', label:'Sport', type:'text'},
+    {k:'role', label:'Rôle', type:'text'},
+    {k:'temps_jeu_min', label:'Temps de jeu (min)', type:'number', step:'1'},
+    {k:'intensite', label:'Intensité (1-10)', type:'number', min:'1', max:'10', step:'1'}
+  ]},
+  {id:'Autre', fields:[
+    {k:'date', label:'Date', type:'date'},
+    {k:'intitule', label:'Intitulé', type:'text'},
+    {k:'duree_min', label:'Durée (min)', type:'number', step:'1'},
+    {k:'details', label:'Détails', type:'text'}
+  ]}
+];
 
-  function buildRow(text, numOverride=null){
-    const now = new Date();
-    const d = loadCahier(nom, prenom, classe, tri);
-    const num = (numOverride!=null)? numOverride : ((d.seances?.length||0)+1);
-    return {
-      "Séance": num,
-      "Nom": nom, "Prénom": prenom, "Classe": classe, "Trimestre": tri,
-      "Date": now.toISOString().slice(0,10),
-      "Semaine": isoWeek(now),
-      "Activité": apsa,
-      "Texte": text
-    };
-  }
+function renderTiles(){
+  ACTIVITES.forEach(a=>{
+    const el = document.createElement('button');
+    el.className = 'tile';
+    el.innerHTML = `<div class="name">${a.id}</div><div class="sub">Saisir une séance</div>`;
+    el.addEventListener('click', ()=> openForm(a));
+    tiles.appendChild(el);
+  });
+}
+renderTiles();
 
-  function updateCounters(){
-    const text = ta.value||"";
-    chars.textContent = `${text.length} caractères`;
-    words.textContent = `${countWords(text)} mots`;
-    const payload = JSON.stringify(buildRow(text));
-    const used = new Blob([payload]).size;
-    const left = Math.max(0, 2000 - used);
-    words_left.textContent = Math.max(0, Math.floor(left/avgWordBytes));
-    makeBadge(qrBadge, used);
-    qrBytesWrap.querySelector("#words_left").textContent = Math.max(0, Math.floor(left/avgWordBytes));
-  }
-  ta.addEventListener("input", ()=>{ ta.style.height="auto"; ta.style.height=(ta.scrollHeight+6)+"px"; updateCounters(); });
-  ta.style.height=(ta.scrollHeight+6)+"px";
-  updateCounters();
+let currentAct = null;
+function openForm(act){
+  currentAct = act;
+  actTitle.textContent = act.id;
+  formGrid.innerHTML = '';
+  act.fields.forEach(f=>{
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="label">${f.label}</div>`;
+    const input = document.createElement('input');
+    input.className = 'input';
+    input.id = f.k;
+    input.type = f.type || 'text';
+    if(f.step) input.step = f.step;
+    if(f.min) input.min = f.min;
+    if(f.max) input.max = f.max;
+    if(f.type==='date' && !input.value) input.valueAsDate = new Date();
+    wrap.appendChild(input);
+    formGrid.appendChild(wrap);
+  });
+  notesEl.value = '';
+  formCard.style.display = 'block';
+  window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+}
 
-  function renderFlat(){
-    const rows = (loadCahier(nom, prenom, classe, tri).seances)||[];
-    const tb = document.getElementById("tbody"); tb.innerHTML="";
-    rows.forEach((r,i)=>{
-      const tr = document.createElement("tr");
-      const short = (r.Texte||"").slice(0,40)+( (r.Texte||"").length>40 ? "…" : "" );
-      tr.innerHTML = `<td>${r["Séance"]||i+1}</td><td>${r.Date||""}</td><td>${r.Semaine||""}</td><td>${r.Activité||""}</td><td>${short}</td>
-                      <td><button data-i="${i}" class="edit btn ghost" style="padding:6px 10px">✏️</button>
-                          <button data-i="${i}" class="del btn ghost" style="padding:6px 10px">🗑</button></td>`;
-      tb.appendChild(tr);
-    });
-
-    tb.querySelectorAll(".del").forEach(b=>b.addEventListener("click", (e)=>{
-      const i = +e.currentTarget.dataset.i;
-      const d = loadCahier(nom, prenom, classe, tri);
-      d.seances.splice(i,1);
-      d.seances = d.seances.map((s,idx)=>({...s,"Séance": idx+1}));
-      saveCahier(nom, prenom, classe, tri, d);
-      render();
-    }));
-    tb.querySelectorAll(".edit").forEach(b=>b.addEventListener("click", (e)=>{
-      const i = +e.currentTarget.dataset.i;
-      const d = loadCahier(nom, prenom, classe, tri);
-      const row = d.seances[i];
-      ta.value = row.Texte||"";
-      ta.style.height="auto"; ta.style.height=(ta.scrollHeight+6)+"px";
-      updateCounters();
-      editingIndex = i;
-      document.getElementById("save_only").textContent = "Mettre à jour la séance";
-      window.scrollTo({top:0,behavior:"smooth"});
-    }));
-  }
-
-  function renderGrouped(){
-    const host = document.getElementById("list_group");
-    const rows = (loadCahier(nom, prenom, classe, tri).seances)||[];
-    const byW = {};
-    rows.forEach(r=>{ (byW[r.Semaine]=byW[r.Semaine]||[]).push(r); });
-    host.innerHTML = "";
-    Object.keys(byW).sort().forEach(w=>{
-      const box = document.createElement("div"); box.className="kard colored";
-      const count = byW[w].length;
-      box.innerHTML = `<h3>Semaine ${w} • <span class="badge">${count} séance(s)</span></h3>`;
-      const ul = document.createElement("ul");
-      byW[w].forEach(r=>{
-        const li = document.createElement("li");
-        const short = (r.Texte||"").slice(0,60)+( (r.Texte||"").length>60 ? "…" : "" );
-        li.textContent = `#${r["Séance"]} — ${r.Date} — ${r.Activité} — ${short}`;
-        ul.appendChild(li);
-      });
-      box.appendChild(ul);
-      host.appendChild(box);
-    });
-  }
-
-  function render(){
-    if(groupMode){
-      document.getElementById("list_flat").style.display="none";
-      document.getElementById("list_group").style.display="block";
-      renderGrouped();
-    } else {
-      document.getElementById("list_group").style.display="none";
-      document.getElementById("list_flat").style.display="block";
-      renderFlat();
+btnSave.addEventListener('click', ()=>{
+  if(!currentAct){ alert('Choisis une activité.'); return; }
+  const champs = {};
+  currentAct.fields.forEach(f=>{
+    const v = document.getElementById(f.k).value;
+    if(v!=='' && v!==undefined) champs[f.k] = (f.type==='number' ? Number(v) : v);
+  });
+  const seance = {
+    app:'CarnetEntrainementEPS',
+    version:'1.0',
+    eleve,
+    seance:{
+      date: champs.date || new Date().toISOString().slice(0,10),
+      activite: currentAct.id,
+      champs,
+      notes: document.getElementById('notes').value || ''
     }
-  }
-  let groupMode = false;
-  render();
-
-  let editingIndex = null;
-
-  document.getElementById("save_only").addEventListener("click", ()=>{
-    const d = loadCahier(nom, prenom, classe, tri);
-    if(editingIndex==null){
-      const row = buildRow(ta.value||"");
-      d.seances = d.seances||[]; d.seances.push(row);
-    }else{
-      d.seances[editingIndex].Texte = ta.value||"";
-      editingIndex = null;
-      document.getElementById("save_only").textContent = "Enregistrer ma séance";
-    }
-    saveCahier(nom, prenom, classe, tri, d);
-    render();
-    alert("Séance enregistrée.");
-  });
-
-  document.getElementById("open_qr").addEventListener("click", ()=>{
-    const d = loadCahier(nom, prenom, classe, tri);
-    const nextNum = (d.seances?.length||0)+1;
-    const row = buildRow(ta.value||"", nextNum);
-    const payload = JSON.stringify(row);
-    try{ sessionStorage.setItem("ceps:qr_payload", payload); }catch(e){}
-    location.href = "qr.html";
-  });
-
-  document.getElementById("toggle_week").addEventListener("click", ()=>{
-    groupMode = !groupMode;
-    document.getElementById("toggle_week").textContent = groupMode ? "Vue liste simple" : "Vue par semaine";
-    render();
-  });
-
-  document.getElementById("export_csv").addEventListener("click", ()=>{
-    const rows = (loadCahier(nom, prenom, classe, tri).seances)||[];
-    if(!rows.length){ alert("Aucune séance à exporter."); return; }
-    const csv = toCSV(rows);
-    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `CarnetEPS_${nom}_${prenom}_${classe}_{tri}.csv`.replace("{tri}", tri); a.click();
-    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-    alert("Astuce : enregistre le CSV « Sur mon iPad » (pas iCloud).");
-  });
-
-  document.getElementById("import_csv").addEventListener("change",(ev)=>{
-    const f = ev.target.files?.[0]; if(!f) return;
-    const fr = new FileReader();
-    fr.onload = ()=>{
-      try{
-        const rows = fromCSV(fr.result);
-        const renum = rows.map((s,idx)=>({...s,"Séance": idx+1}));
-        const d = loadCahier(nom, prenom, classe, tri); d.seances = renum; saveCahier(nom, prenom, classe, tri, d);
-        render();
-        alert("CSV importé.");
-      }catch(e){ alert("Erreur CSV."); }
-    };
-    fr.readAsText(f);
-  });
+  };
+  store.set(keys.derniereSeance, seance);
+  const all = store.get(keys.seances, []);
+  all.push(seance);
+  store.set(keys.seances, all);
+  alert('✅ Séance enregistrée.');
 });
+
+btnCSV.addEventListener('click', ()=>{
+  const s = store.get(keys.derniereSeance, null);
+  if(!s){ alert('Aucune séance enregistrée.'); return; }
+  const flat = flattenSeance(s);
+  const headers = Object.keys(flat);
+  const csv = [headers.join(','), headers.map(h=>csvEscape(flat[h])).join(',')].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'seance.csv'; a.click();
+  URL.revokeObjectURL(url);
+});
+
+function flattenSeance(s){
+  const base = {
+    Nom: s.eleve.nom || '',
+    Prénom: s.eleve.prenom || '',
+    Classe: s.eleve.classe || '',
+    Sexe: s.eleve.sexe || '',
+    Activité: s.seance.activite || '',
+    Date: s.seance.date || '',
+    Notes: s.seance.notes || ''
+  };
+  // Append champs
+  for(const [k,v] of Object.entries(s.seance.champs||{})){
+    base[k] = v;
+  }
+  return base;
+}
+function csvEscape(v){
+  const str = String(v==null?'':v);
+  if(/[",\n]/.test(str)) return '"'+str.replace(/"/g,'""')+'"';
+  return str;
+}
