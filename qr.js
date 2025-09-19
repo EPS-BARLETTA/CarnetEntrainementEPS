@@ -1,5 +1,4 @@
 import {store, keys} from './assets/js/storage.js';
-const wrap = document.getElementById('qrWrap');
 const qrBox = document.getElementById('qrBox');
 const btnContrast = document.getElementById('btn-contrast');
 const btnFull = document.getElementById('btn-full');
@@ -9,15 +8,13 @@ if(!last){
   qrBox.innerHTML = '<div class="sub">Aucune séance enregistrée.</div>';
 } else {
   const data = JSON.stringify(last);
-  // QRCode library expected at window.QRCode
   try{
     const el = document.getElementById('qrcode');
     el.innerHTML='';
-    const qr = new window.QRCode(el, {text:data, width:256, height:256, correctLevel: window.QRCode.CorrectLevel.M});
-    // store reference for download
+    const qr = new window.QRCode(el, {text:data, width:320, height:320, correctLevel: window.QRCode.CorrectLevel.M});
     window.__qrCanvas = el.querySelector('canvas');
   }catch(e){
-    qrBox.innerHTML = '<div class="sub">QR indisponible (lib manquante). Utilise l\'export CSV.</div>';
+    qrBox.innerHTML = '<div class="sub">QR indisponible. Vérifie que <code>qrcode.min.js</code> est bien à la racine.</div>';
   }
 }
 btnContrast.addEventListener('click', ()=>{

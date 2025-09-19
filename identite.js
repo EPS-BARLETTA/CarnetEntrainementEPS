@@ -30,9 +30,5 @@ function isComplete(){
   return e.nom && e.prenom && e.classe && e.sexe;
 }
 function renderStatus(){
-  if(isComplete()){
-    status.textContent = '✅ Enregistré';
-  } else {
-    status.textContent = '⏳ En attente';
-  }
+  status.textContent = isComplete() ? '✅ Enregistré' : '⏳ En attente';
 }

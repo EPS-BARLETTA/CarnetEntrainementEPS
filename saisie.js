@@ -7,14 +7,12 @@ const actTitle = $('#actTitle');
 const notesEl = $('#notes');
 const btnSave = $('#btn-save');
 const btnCSV = $('#btn-csv');
-
 // Ensure identity exists
 const eleve = store.get(keys.eleve, null);
 if(!eleve || !eleve.nom || !eleve.prenom || !eleve.classe || !eleve.sexe){
-  alert('Renseigne ton identité d'abord.');
+  alert('Renseigne ton identité d\'abord.');
   location.href = 'identite.html';
 }
-
 const ACTIVITES = [
   {id:'Course', fields:[
     {k:'date', label:'Date', type:'date'},
@@ -52,10 +50,10 @@ const ACTIVITES = [
     {k:'details', label:'Détails', type:'text'}
   ]}
 ];
-
 function renderTiles(){
   ACTIVITES.forEach(a=>{
     const el = document.createElement('button');
+    el.type='button';
     el.className = 'tile';
     el.innerHTML = `<div class="name">${a.id}</div><div class="sub">Saisir une séance</div>`;
     el.addEventListener('click', ()=> openForm(a));
@@ -63,7 +61,6 @@ function renderTiles(){
   });
 }
 renderTiles();
-
 let currentAct = null;
 function openForm(act){
   currentAct = act;
@@ -87,12 +84,13 @@ function openForm(act){
   formCard.style.display = 'block';
   window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
 }
-
 btnSave.addEventListener('click', ()=>{
   if(!currentAct){ alert('Choisis une activité.'); return; }
   const champs = {};
   currentAct.fields.forEach(f=>{
-    const v = document.getElementById(f.k).value;
+    const el = document.getElementById(f.k);
+    if(!el) return;
+    const v = el.value;
     if(v!=='' && v!==undefined) champs[f.k] = (f.type==='number' ? Number(v) : v);
   });
   const seance = {
@@ -103,7 +101,7 @@ btnSave.addEventListener('click', ()=>{
       date: champs.date || new Date().toISOString().slice(0,10),
       activite: currentAct.id,
       champs,
-      notes: document.getElementById('notes').value || ''
+      notes: notesEl.value || ''
     }
   };
   store.set(keys.derniereSeance, seance);
@@ -112,7 +110,6 @@ btnSave.addEventListener('click', ()=>{
   store.set(keys.seances, all);
   alert('✅ Séance enregistrée.');
 });
-
 btnCSV.addEventListener('click', ()=>{
   const s = store.get(keys.derniereSeance, null);
   if(!s){ alert('Aucune séance enregistrée.'); return; }
@@ -125,7 +122,6 @@ btnCSV.addEventListener('click', ()=>{
   a.href = url; a.download = 'seance.csv'; a.click();
   URL.revokeObjectURL(url);
 });
-
 function flattenSeance(s){
   const base = {
     Nom: s.eleve.nom || '',
@@ -136,7 +132,6 @@ function flattenSeance(s){
     Date: s.seance.date || '',
     Notes: s.seance.notes || ''
   };
-  // Append champs
   for(const [k,v] of Object.entries(s.seance.champs||{})){
     base[k] = v;
   }
